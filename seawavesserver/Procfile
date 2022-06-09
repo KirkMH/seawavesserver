@@ -1,0 +1,1 @@
+web: gunicorn seawavesserver.wsgi --log-file -

@@ -78,10 +78,21 @@ WSGI_APPLICATION = 'seawavesserver.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_seawavesserver',
+        'USER': 'root',
+        'PASSWORD': 'p@$$w0rD',
+        'HOST': 'localhost'
     }
 }
+
+# as per instructions from https://www.codementor.io/@jamesezechukwu/how-to-deploy-django-app-on-heroku-dtsee04d4
+# ----------------------------------------------------------------------------
+import dj_database_url 
+prod_db  =  dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(prod_db)
+# ----------------------------------------------------------------------------
+
 
 
 # Password validation
@@ -120,7 +131,20 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# as per instructions from https://www.codementor.io/@jamesezechukwu/how-to-deploy-django-app-on-heroku-dtsee04d4
+# ----------------------------------------------------------------------------
+STATIC_ROOT  = BASE_DIR / 'staticfiles'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# other settings required by check --deploy
+# SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
