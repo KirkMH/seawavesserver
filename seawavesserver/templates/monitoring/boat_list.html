@@ -1,0 +1,89 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block extra_header %}
+{% include '../includes/datatable.html' %}    
+{% endblock extra_header %}
+
+{% block title %}Boat Records{% endblock title %}
+    
+{% block page_title %}Boat Records{% endblock page_title %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+    <li class="breadcrumb-item active">Boat Records</li>
+{% endblock breadcrumb %}
+
+{% block main_content %}
+<div class="card m-4">
+    <form method="get">
+        <div class="card-header">
+            <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            </div>
+            </div>
+        </div>
+    </form>
+    <div class="card-body table-responsive">
+        <table id="dtBoat" class="table table-hover table-head-fixed table-sm">
+            <thead>
+                <tr>
+                    <th class="text-center" width=10%>Action</th>
+                    <th>Boat Name</th>
+                    <th>Owner</th>
+                    <th>Owner's Contact Info</th>
+                    <th>Boat Measure (L x W x H)</th>
+                    <th>Registered</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock main_content %}
+
+
+{% block js %}
+    <script src="{% static 'js/formatter.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $("#dtBoat").DataTable({
+                serverSide: true,
+                sAjaxSource: "{% url 'boat_dtlist' %}", 
+                columns: [
+                    {   
+                        data: 0,
+                        render: function (data) {
+                            return '<a href="#" title="View" class="btn btn-sm btn-primary"><i class="far fa-eye"></i></a>';
+                            // return '<a href="boat/' + data + '/view" title="View" class="btn btn-sm btn-primary"><i class="far fa-eye"></i></a>';
+                        },
+                        className: 'text-center'
+                    },
+                    {name: "name", data: 1},
+                    {name: "owner", data: 2},
+                    {name: "owner_contact", data: 3},
+                    {
+                        name: "measure", 
+                        data: null,
+                        render: function (data) {
+                            return data[4] + 'm x ' + data[5] + 'm x ' + data[6] + 'm';
+                        },
+                        className: 'text-center'
+                    },
+                    {
+                        name: "registered", 
+                        data: 7,
+                        render: function (data) {
+                            return formatDate(new Date(data));
+                        }
+                    },
+                ],
+                order: [[1, 'asc']],
+            });
+            $("#menu_boats").addClass("active");
+        })
+    </script>
+{% endblock js %}

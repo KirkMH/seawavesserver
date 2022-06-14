@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-tq0mdn7anz!h#^vyx_w+qmgvt&q1+7+9z1_+fef1+!1b$c+&_n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['seawavesserver.herokuapp.com', '127.0.01']
+ALLOWED_HOSTS = ['seawavesserver.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -58,7 +58,7 @@ ROOT_URLCONF = 'seawavesserver.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

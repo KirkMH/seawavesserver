@@ -21,7 +21,16 @@ def addBoat(request):
     serializer = BoatSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-    return Response(serializer.data)
+    response = serializer.data
+    setting = Setting.objects.last()
+    if setting:
+        response['critical_pitch_angle'] = setting.critical_pitch_angle
+        response['critical_roll_angle'] = setting.critical_roll_angle
+        response['reading_rate'] = setting.reading_rate
+        response['saving_rate'] = setting.saving_rate
+        response['sms_rate'] = setting.sms_rate
+        response['mobile_number'] = setting.mobile_number
+    return Response(response)
     
 @api_view(['GET'])
 def getSettings(request):

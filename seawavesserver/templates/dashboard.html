@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock title %}
+
+
+{% block css %}
+<style>
+  .bulletin-title {
+    font-size: larger;
+    cursor: pointer;
+  }
+  .bulletin-info {
+    font-size: small;
+  }
+</style>
+{% endblock css %}  
+
+{% block wrapper %}
+
+{% endblock wrapper %}
+  
+{% block page_title %}Dashboard{% endblock page_title %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item active">Dashboard</li>
+{% endblock breadcrumb %}
+    
+
+{% block main_content %}   
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Greeting section -->
+        <div class="row mb-2">
+          <div class="col-12">
+            <h5>{{ greeting }}</h5>
+          </div>
+        </div>
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ boat_count }}</h3>
+
+                <p>Boats Registered</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-ship"></i>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ setting.mobile_number }}</h3>
+
+                <p>Mobile Number Alarm</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-mobile-screen"></i>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ setting.critical_pitch_angle }}<sup style="font-size: 20px">°</sup></h3>
+
+                <p>Critical Pitch Angle</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-circle-exclamation"></i>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ setting.critical_roll_angle }}<sup style="font-size: 20px">°</sup></h3>
+
+                <p>Critical Roll Angle</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-triangle-exclamation"></i>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <!-- Left col -->
+          <section class="col-lg-12 connectedSortable">
+            <!-- Bulletin -->
+            <div class="card">
+              <div class="card-header border-0">
+                <h3 class="card-title">
+                  <i class="fas fa-th mr-1"></i>
+                  Bulletin
+                </h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-sm">
+                  
+                  {% if not bulletin_list %}
+                  <tr><td>The bulletin is clear. I think that's good news!</td></tr>
+                  {% else %}
+                  
+                  {% for bulletin in bulletin_list %}
+                  <tr><td>
+                    <div class="bulletin-title text-primary" data-details="{{ bulletin.message }}">{{ bulletin.title }}</div>
+                    <div class="bulletin-info text-muted">Posted at {{ bulletin.created_at }}</div>
+                  </td></tr>  
+                  {% endfor %}
+                           
+                  {% endif %}
+                </table>
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+            
+          </section>
+          <!-- /.Left col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    
+{% endblock main_content %}
+
+
+{% block js %}
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'dist/js/demo.js' %}"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
+<!-- bootboxjs -->
+<script src="{% static 'js/bootbox.all.min.js' %}"></script>
+
+<script>
+  $(document).ready(function() {
+      $("#menu_dashboard").addClass("active");
+
+      $(".bulletin-title").click(function() {
+        bootbox.dialog({
+            title: $(this).text(),
+            message: $(this).data('details')
+        });
+      });
+  })
+</script>
+{% endblock js %}
+  

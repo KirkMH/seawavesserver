@@ -1,5 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator
+from django.contrib.auth.models import User
+from datetime import date
 
 
 class Boat(models.Model):
@@ -11,6 +14,13 @@ class Boat(models.Model):
     owner = models.CharField(
         _("Owner's Name"), 
         max_length=250
+    )
+    owner_contact = models.CharField(
+        _("Owner's Contact Number"), 
+        max_length=50,
+        null=True,
+        blank=True,
+        default=None
     )
     length = models.FloatField(
         _("Boat's Length"),
@@ -28,6 +38,10 @@ class Boat(models.Model):
         _("Registered at"), 
         auto_now=False, 
         auto_now_add=True
+    )
+    is_active = models.BooleanField(
+        _("Is active?"),
+        default=True
     )
 
     class Meta:
@@ -143,4 +157,41 @@ class Setting(models.Model):
         max_length=13
     )
 
+    
+
+class AvailableBulletin(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(available_until__gte=date.today())
+
+
+class Bulletin(models.Model):
+    title = models.CharField(
+        _("Title"), 
+        max_length=250
+    )
+    message = models.TextField(_("Message"))
+    available_until = models.DateField(
+        _("Available Until"), 
+        auto_now=False, 
+        auto_now_add=False,
+        validators=[MinValueValidator(date.today())]
+    )
+    created_at = models.DateTimeField(
+        _("Created At"), 
+        auto_now=False, 
+        auto_now_add=True
+    )
+    created_by = models.ForeignKey(
+        User, 
+        verbose_name=_("Created By"), 
+        on_delete=models.CASCADE
+    )
+    objects = models.Manager()
+    available = AvailableBulletin()
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
     
