@@ -6,9 +6,8 @@ from datetime import datetime
 
 def dashboard_view(request):
     hour = datetime.now().hour
-    greeting = 'Good {}, {}!'.format(
-        'morning' if hour < 12 else 'afternoon' if hour < 18 else 'evening', 
-        request.user.first_name)
+    greeting = 'Good {}!'.format(
+        'morning' if hour < 12 else 'afternoon' if hour < 18 else 'evening')
     boat_count = Boat.objects.filter(is_active=True).count()
 
     context = {
