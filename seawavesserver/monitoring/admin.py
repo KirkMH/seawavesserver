@@ -17,7 +17,7 @@ class RecordAdmin(admin.ModelAdmin):
 admin.site.register(Record, RecordAdmin)
 
 class SettingAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'critical_pitch_angle', 'critical_roll_angle', 'reading_rate', 'saving_rate', 'sms_rate', 'mobile_number')
+    list_display = ('pk', 'critical_pitch_angle', 'critical_roll_angle', 'reading_rate', 'saving_rate', 'sms_rate', 'post_rate', 'mobile_number')
 admin.site.register(Setting, SettingAdmin)
 
 class BulletinAdmin(admin.ModelAdmin):

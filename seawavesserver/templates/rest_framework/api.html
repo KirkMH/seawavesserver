@@ -1,0 +1,9 @@
+{% extends "rest_framework/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block branding %}
+    <a class="navbar-brand" rel="nofollow" href="{% url 'dashboard' %}">
+        {% trans 'Sea-condition Emergency Alert and Warning Apparatus for Vessel Safety (SEAWAVES)' %}
+    </a>
+{% endblock %}

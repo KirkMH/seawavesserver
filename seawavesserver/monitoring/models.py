@@ -152,11 +152,18 @@ class Setting(models.Model):
         _("SMS Rate"),
         help_text='(in milliseconds)'
     )
+    post_rate = models.FloatField(
+        _("Server Post Rate"),
+        help_text='(in milliseconds)'
+    )
     mobile_number = models.CharField(
         _("Mobile number for alarms"), 
         max_length=13
     )
 
+    def __str__(self):
+        return 'Setting #%d' % self.pk
+    
     
 
 class AvailableBulletin(models.Manager):
