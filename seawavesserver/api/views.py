@@ -22,14 +22,14 @@ def addBoat(request):
     if serializer.is_valid():
         serializer.save()
     response = serializer.data
-    setting = Setting.objects.last()
-    if setting:
-        response['critical_pitch_angle'] = setting.critical_pitch_angle
-        response['critical_roll_angle'] = setting.critical_roll_angle
-        response['reading_rate'] = setting.reading_rate
-        response['saving_rate'] = setting.saving_rate
-        response['sms_rate'] = setting.sms_rate
-        response['mobile_number'] = setting.mobile_number
+    # setting = Setting.objects.last()
+    # if setting:
+    #     response['critical_pitch_angle'] = setting.critical_pitch_angle
+    #     response['critical_roll_angle'] = setting.critical_roll_angle
+    #     response['reading_rate'] = setting.reading_rate
+    #     response['saving_rate'] = setting.saving_rate
+    #     response['sms_rate'] = setting.sms_rate
+    #     response['mobile_number'] = setting.mobile_number
     return Response(response)
     
 @api_view(['GET'])
@@ -58,4 +58,5 @@ def addRecord(request):
     serializer = RecordSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+    print("Add Record: " + serializer.data)
     return Response(serializer.data)

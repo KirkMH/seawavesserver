@@ -89,7 +89,6 @@ class Record(models.Model):
         _("Acceleration-Y"),
         help_text='(in meters per second)'
     )
-    
     accel_z = models.FloatField(
         _("Acceleration-Z"),
         help_text='(in meters per second)'
