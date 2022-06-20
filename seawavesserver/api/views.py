@@ -58,10 +58,10 @@ def addRecord(request):
     serializer = RecordSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        print("Add Record: " + serializer.data)
+        print(f"Add Record: {serializer.data}")
         return Response(serializer.data)
     else:
-        print("Add Record error: " + serializer.errors)
+        print(f"Add Record error: {serializer.errors}")
         return Response(serializer.errors)
         
     
