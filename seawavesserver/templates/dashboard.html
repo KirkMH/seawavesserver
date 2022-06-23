@@ -14,7 +14,10 @@
     font-size: small;
   }
   #map {
-    height: 100%;
+    height: 400px;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
   }
 </style>
 {% endblock css %}  
@@ -199,10 +202,47 @@
 <script src="{% static 'js/bootbox.all.min.js' %}"></script>
 
 <!-- Google Maps -->
-<script src="{% static 'js/map.js' %}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 <script>
+  // Initialize and add the map
+  function initMap() {
+    // The location of Uluru
+    const locations = [
+      { name: "M/V Martirez", lat: 11.70256, lng: 122.376175 },
+      { name: "MV Julu", lat: 11.702556, lng: 122.37618 },
+      { name: "MZ", lat: 11.702561, lng: 122.37618 },
+    ];
+    // The map, centered at Uluru
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 20,
+      center: locations[0],
+    });
+    
+    // Create an info window to share between markers.
+    const infoWindow = new google.maps.InfoWindow();
+
+    // The markers
+    for (let i = 0; i < locations.length; i++) {
+      const loc = locations[i];
+      const marker = new google.maps.Marker({
+        position: {lat: loc.lat, lng: loc.lng},
+        title: loc.name,
+        label: loc.name,
+        map: map,
+      });
+      
+      // Add a click listener for each marker, and set up the info window.
+      marker.addListener("click", () => {
+        infoWindow.close();
+        infoWindow.setContent(marker.getTitle());
+        infoWindow.open(marker.getMap(), marker);
+      });
+    }
+  }
+
+  window.initMap = initMap;
+
   $(document).ready(function() {
       $("#menu_dashboard").addClass("active");
 
@@ -214,5 +254,8 @@
       });
   })
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly" defer></script>
+
 {% endblock js %}
   

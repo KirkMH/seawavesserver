@@ -49,6 +49,10 @@ class Boat(models.Model):
 
     def __str__(self):
         return self.name
+
+    def last_location():
+        last_record = self.record_set.last()
+        return '%d, %d' % (last_record.latitude, last_record.longitude)
     
 
 class Record(models.Model):
