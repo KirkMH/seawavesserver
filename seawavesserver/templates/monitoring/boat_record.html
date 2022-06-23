@@ -1,0 +1,98 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block extra_header %}
+{% include '../includes/datatable.html' %}    
+{% endblock extra_header %}
+
+{% block title %}Boat Record{% endblock title %}
+    
+{% block page_title %}Records of {{ boat.name }}{% endblock page_title %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'boat_list' %}">Boats</a></li>
+    <li class="breadcrumb-item active">Records</li>
+{% endblock breadcrumb %}
+
+{% block main_content %}
+<div class="card m-4">
+    <form method="get">
+        <div class="card-header">
+            <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            </div>
+            </div>
+        </div>
+    </form>
+    <div class="card-body table-responsive">
+        <table id="dtRecord" class="table table-hover table-head-fixed table-sm">
+            <thead>
+                <tr>
+                    <th class="text-center">Timestamp</th>
+                    <th class="text-center">Latitude</th>
+                    <th class="text-center">Longitude</th>
+                    <th class="text-center">Altitude</th>
+                    <th class="text-center">Heading Angle</th>
+                    <th class="text-center">Pitch Angle</th>
+                    <th class="text-center">Roll Angle</th>
+                    <th class="text-center">Gyro-X</th>
+                    <th class="text-center">Gyro-Y</th>
+                    <th class="text-center">Gyro-Z</th>
+                    <th class="text-center">Accel-X</th>
+                    <th class="text-center">Accel-Y</th>
+                    <th class="text-center">Accel-Z</th>
+                    <th class="text-center">Magnet-X</th>
+                    <th class="text-center">Magnet-Y</th>
+                    <th class="text-center">Magnet-Z</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock main_content %}
+
+
+{% block js %}
+    <script src="{% static 'js/formatter.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#dtRecord').DataTable({
+                serverSide: true,
+                sAjaxSource: "{% url 'record_dtlist' boat.pk %}", 
+                columns: [
+                    {
+                        name: "timestamp", 
+                        data: 1,
+                        render: function (data) {
+                            return formatDate(new Date(data));
+                        }
+                    },
+                    {name: "latitude", data: 2, className: 'text-right'},
+                    {name: "longitude", data: 3, className: 'text-right'},
+                    {name: "altitude", data: 4, className: 'text-right'},
+                    {name: "heading", data: 5, className: 'text-right'},
+                    {name: "pitch", data: 6, className: 'text-right'},
+                    {name: "roll", data: 7, className: 'text-right'},
+                    {name: "gyro_x", data: 8, className: 'text-right'},
+                    {name: "gyro_y", data: 9, className: 'text-right'},
+                    {name: "gyro_z", data: 10, className: 'text-right'},
+                    {name: "accel_x", data: 11, className: 'text-right'},
+                    {name: "accel_y", data: 12, className: 'text-right'},
+                    {name: "accel_z", data: 13, className: 'text-right'},
+                    {name: "mag_x", data: 14, className: 'text-right'},
+                    {name: "mag_y", data: 15, className: 'text-right'},
+                    {name: "mag_z", data: 16, className: 'text-right'},
+                ],
+                order: [[0, 'desc']],
+            });
+
+            setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, 1000);
+            $("#menu_boats").addClass("active");
+        })
+    </script>
+{% endblock js %}

@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django_serverside_datatable.views import ServerSideDatatableView
-from .models import Bulletin, Setting, Boat
+from .models import Bulletin, Setting, Boat, Record
 from datetime import datetime
 
 
@@ -25,3 +25,23 @@ def boat_listview(request):
 class BoatDTListView(ServerSideDatatableView):
 	queryset = Boat.objects.all()
 	columns = ['pk', 'name', 'owner', 'owner_contact', 'length', 'width', 'height', 'registered_at']
+    
+    
+def record_listview(request, pk):
+    request.session['boat_id'] = pk
+    context = {'boat': Boat.objects.get(pk=pk)}
+    return render(request, 'monitoring/boat_record.html', context)
+
+class RecordDTListView(ServerSideDatatableView):
+	
+    def get(self, request, *args, **kwargs):
+        pk = request.session.get('boat_id', 0)
+        boat = get_object_or_404(Boat, pk=pk)
+        self.queryset = Record.objects.filter(boat=boat)
+        self.columns = ['pk', 'timestamp', 'latitude', 'longitude', 'altitude', 
+                        'heading_angle', 'pitch_angle', 'roll_angle', 
+                        'gyro_x', 'gyro_y', 'gyro_z', 
+                        'accel_x', 'accel_y', 'accel_z', 
+                        'mag_x', 'mag_y', 'mag_z']
+        return super().get(request, *args, **kwargs)
+        

@@ -5,13 +5,13 @@
 {% include '../includes/datatable.html' %}    
 {% endblock extra_header %}
 
-{% block title %}Boat Records{% endblock title %}
+{% block title %}List of Boats{% endblock title %}
     
-{% block page_title %}Boat Records{% endblock page_title %}
+{% block page_title %}List of Boats{% endblock page_title %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-    <li class="breadcrumb-item active">Boat Records</li>
+    <li class="breadcrumb-item active">Boats</li>
 {% endblock breadcrumb %}
 
 {% block main_content %}
@@ -57,8 +57,7 @@
                     {   
                         data: 0,
                         render: function (data) {
-                            return '<a href="#" title="View" class="btn btn-sm btn-primary"><i class="far fa-eye"></i></a>';
-                            // return '<a href="boat/' + data + '/view" title="View" class="btn btn-sm btn-primary"><i class="far fa-eye"></i></a>';
+                            return '<a href="' + data + '/view" title="View" class="btn btn-sm btn-primary"><i class="far fa-eye"></i></a>';
                         },
                         className: 'text-center'
                     },
