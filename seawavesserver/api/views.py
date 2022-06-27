@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from monitoring.models import Boat, Record, Setting
-from .serializers import BoatSerializer, RecordSerializer, SettingSerializer
+from .serializers import BoatSerializer, RecordSerializer, SettingSerializer, BoatLocationSerializer
 
 
 @api_view(['GET'])
@@ -13,6 +13,15 @@ def getBoats(request):
     serializer = BoatSerializer(boats, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getBoatLocations(request):
+    '''
+    Returns the list of boats with their current location
+    '''
+    boats = Boat.objects.filter(is_active=True)
+    serializer = BoatLocationSerializer(boats, many=True)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 def addBoat(request):
     '''
@@ -22,14 +31,6 @@ def addBoat(request):
     if serializer.is_valid():
         serializer.save()
     response = serializer.data
-    # setting = Setting.objects.last()
-    # if setting:
-    #     response['critical_pitch_angle'] = setting.critical_pitch_angle
-    #     response['critical_roll_angle'] = setting.critical_roll_angle
-    #     response['reading_rate'] = setting.reading_rate
-    #     response['saving_rate'] = setting.saving_rate
-    #     response['sms_rate'] = setting.sms_rate
-    #     response['mobile_number'] = setting.mobile_number
     return Response(response)
     
 @api_view(['GET'])

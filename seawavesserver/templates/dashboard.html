@@ -207,12 +207,23 @@
 <script>
   // Initialize and add the map
   function initMap() {
-    // The location of Uluru
-    const locations = [
-      { name: "M/V Martirez", lat: 11.70256, lng: 122.376175 },
-      { name: "MV Julu", lat: 11.702556, lng: 122.37618 },
-      { name: "MZ", lat: 11.702561, lng: 122.37618 },
-    ];
+    let locations = [];
+    $.ajax('/api/locations', 
+    {
+        dataType: 'json', // type of response data
+        success: function (data,status,xhr) {   // success callback function
+          console.log(data);
+            // $('p').append(data.firstName + ' ' + data.middleName + ' ' + data.lastName);
+        },
+        error: function (jqXhr, textStatus, errorMessage) { // error callback 
+            console.log('Error: ' + errorMessage);
+        }
+    });
+    // const locations = [
+    //   { name: "M/V Martirez", lat: 11.70256, lng: 122.376175 },
+    //   { name: "MV Julu", lat: 11.702556, lng: 122.37618 },
+    //   { name: "MZ", lat: 11.702561, lng: 122.37618 },
+    // ];
     // The map, centered at Uluru
     const map = new google.maps.Map(document.getElementById("map"), {
       zoom: 20,
@@ -223,12 +234,14 @@
     const infoWindow = new google.maps.InfoWindow();
 
     // The markers
+    const iconBase = "/static/img/dot_";
     for (let i = 0; i < locations.length; i++) {
       const loc = locations[i];
       const marker = new google.maps.Marker({
-        position: {lat: loc.lat, lng: loc.lng},
+        position: {lat: loc.latitude, lng: loc.longitude},
         title: loc.name,
         label: loc.name,
+        icon: iconBase + loc.color + ".png", 
         map: map,
       });
       

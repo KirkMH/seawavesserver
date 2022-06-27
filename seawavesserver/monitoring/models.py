@@ -133,6 +133,21 @@ class Record(models.Model):
     def __str__(self):
         return '%s: %f° %f°' % (self.boat.name, self.latitude, self.longitude)
 
+    def getColor(self):
+        setting = Setting.objects.last()
+        c_pitch = setting.critical_pitch_angle
+        c_roll = setting.critical_roll_angle
+        color = None
+        if self.pitch_angle >= c_pitch or self.roll_angle >= c_roll:
+            color = "red"
+        elif self.pitch_angle >= (c_pitch * 0.9) or self.roll_angle >= (c_roll * 0.9):
+            color = "orange"
+        elif self.pitch_angle >= (c_pitch * 0.8) or self.roll_angle >= (c_roll * 0.8):
+            color = "yellow"
+        else:
+            color = "black"
+        return color
+
 
 class Setting(models.Model):
     critical_pitch_angle = models.FloatField(
