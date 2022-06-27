@@ -25,15 +25,15 @@ class BoatLocationSerializer(serializers.ModelSerializer):
 
     def getLatitude(self, boat):
         rec = Record.objects.filter(boat=boat).first()
-        return rec.latitude
+        return rec.latitude if rec != None else None
 
     def getLongitude(self, boat):
         rec = Record.objects.filter(boat=boat).first()
-        return rec.longitude
+        return rec.longitude if rec != None else None
 
     def getColor(self, boat):
         rec = Record.objects.filter(boat=boat).first()
-        return rec.getColor()
+        return rec.getColor() if rec != None else None
 
     class Meta:
         model = Boat

@@ -194,10 +194,6 @@
 {% block js %}
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{% static 'dist/js/demo.js' %}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
 <!-- bootboxjs -->
 <script src="{% static 'js/bootbox.all.min.js' %}"></script>
 
@@ -206,55 +202,62 @@
 
 <script>
   // Initialize and add the map
-  function initMap() {
-    let locations = [];
-    $.ajax('/api/locations', 
-    {
-        dataType: 'json', // type of response data
-        success: function (data,status,xhr) {   // success callback function
-          console.log(data);
-            // $('p').append(data.firstName + ' ' + data.middleName + ' ' + data.lastName);
-        },
-        error: function (jqXhr, textStatus, errorMessage) { // error callback 
-            console.log('Error: ' + errorMessage);
-        }
-    });
     // const locations = [
-    //   { name: "M/V Martirez", lat: 11.70256, lng: 122.376175 },
-    //   { name: "MV Julu", lat: 11.702556, lng: 122.37618 },
-    //   { name: "MZ", lat: 11.702561, lng: 122.37618 },
+    //   { name: "M/V Martirez", latitude: 11.70256, longitude: 122.376175, color:"black" },
+    //   { name: "MV Julu", latitude: 11.702556, longitude: 122.37618, color:"orange" },
+    //   { name: "MZ", latitude: 11.702561, longitude: 122.37618, color:"red" },
     // ];
-    // The map, centered at Uluru
-    const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 20,
-      center: locations[0],
+  var map;
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 11.70256, lng: 122.376175},
+      zoom: 20
     });
-    
-    // Create an info window to share between markers.
-    const infoWindow = new google.maps.InfoWindow();
 
-    // The markers
-    const iconBase = "/static/img/dot_";
-    for (let i = 0; i < locations.length; i++) {
-      const loc = locations[i];
-      const marker = new google.maps.Marker({
-        position: {lat: loc.latitude, lng: loc.longitude},
-        title: loc.name,
-        label: loc.name,
-        icon: iconBase + loc.color + ".png", 
-        map: map,
-      });
-      
-      // Add a click listener for each marker, and set up the info window.
-      marker.addListener("click", () => {
-        infoWindow.close();
-        infoWindow.setContent(marker.getTitle());
-        infoWindow.open(marker.getMap(), marker);
-      });
-    }
+    loadMap();
+  }
+   
+  function loadMap() {
+    $.ajax({
+      type: "GET",
+      url: '/api/locations',
+      dataType: 'json', // type of response data
+      success: function (data) {   // success callback function
+        console.log(data);
+        const locations = data;
+        
+        // Create an info window to share between markers.
+        const infoWindow = new google.maps.InfoWindow();
+
+        console.log(map);
+        // The markers
+        const iconBase = "/static/img/dot_";
+        for (let i = 0; i < locations.length; i++) {
+          const loc = locations[i];
+          console.log(loc);
+          const marker = new google.maps.Marker({
+            position: {lat: loc.latitude, lng: loc.longitude},
+            title: loc.name,
+            label: loc.name,
+            icon: iconBase + loc.color + ".png", 
+            map: map,
+          });
+          
+          // Add a click listener for each marker, and set up the info window.
+          marker.addListener("click", () => {
+            infoWindow.close();
+            infoWindow.setContent(marker.getTitle());
+            infoWindow.open(marker.getMap(), marker);
+          });
+        }
+      },
+      error: function (errorMessage) { // error callback 
+          console.log('Error: ' + errorMessage);
+      }
+    });
   }
 
-  window.initMap = initMap;
+  // window.initMap = initMap;
 
   $(document).ready(function() {
       $("#menu_dashboard").addClass("active");
@@ -268,7 +271,7 @@
   })
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly" defer></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly"></script>
 
 {% endblock js %}
   
