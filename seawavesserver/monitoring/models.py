@@ -145,7 +145,7 @@ class Record(models.Model):
         elif self.pitch_angle >= (c_pitch * 0.8) or self.roll_angle >= (c_roll * 0.8):
             color = "yellow"
         else:
-            color = "black"
+            color = "blue"
         return color
 
 
