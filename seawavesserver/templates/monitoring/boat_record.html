@@ -91,7 +91,9 @@
                 order: [[0, 'desc']],
             });
 
-            setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, 1000);
+            const reloadInterval = parseInt("{{post_interval}}");
+            console.log(reloadInterval);
+            setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, reloadInterval);
             $("#menu_boats").addClass("active");
         })
     </script>

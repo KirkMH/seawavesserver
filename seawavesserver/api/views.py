@@ -1,26 +1,24 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import generics
 from monitoring.models import Boat, Record, Setting
-from .serializers import BoatSerializer, RecordSerializer, SettingSerializer, BoatLocationSerializer
+from .serializers import *
+from datetime import datetime
 
 
-@api_view(['GET'])
-def getBoats(request):
+class BoatListView(generics.ListAPIView):
     '''
     Returns the record of all registered boats.
     '''
-    boats = Boat.objects.all()
-    serializer = BoatSerializer(boats, many=True)
-    return Response(serializer.data)
+    queryset = Boat.objects.all()
+    serializer_class = BoatSerializer
 
-@api_view(['GET'])
-def getBoatLocations(request):
+class BoatLocationsListView(generics.ListAPIView):
     '''
     Returns the list of boats with their current location
     '''
-    boats = Boat.objects.filter(is_active=True)
-    serializer = BoatLocationSerializer(boats, many=True)
-    return Response(serializer.data)
+    queryset = Boat.objects.filter(is_active=True)
+    serializer_class = BoatLocationSerializer
 
 @api_view(['POST'])
 def addBoat(request):
@@ -47,7 +45,19 @@ def getRecords(request):
     '''
     Returns all reading records from all boats.
     '''
+    qpBoat = request.query_params.get('boat')
+    qpFrom = request.query_params.get('from')
+    qpTo = request.query_params.get('to')
     records = Record.objects.all()
+    if qpBoat != None:
+        records = records.filter(boat=qpBoat)
+    if qpFrom != None:
+        dFrom = datetime.strptime(qpFrom, '%d/%m/%Y').date()
+        records = records.filter(timestamp__date__gte=dFrom)
+    if qpTo != None:
+        dTo = datetime.strptime(qpTo, '%d/%m/%Y').date()
+        records = records.filter(timestamp__date__lte=dTo)
+
     serializer = RecordSerializer(records, many=True)
     return Response(serializer.data)
 

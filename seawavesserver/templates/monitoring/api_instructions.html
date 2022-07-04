@@ -1,0 +1,484 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}API Instructions{% endblock title %}
+    
+{% block page_title %}<span id="top">API Instructions</span>{% endblock page_title %}
+
+{% block css %}
+<style>
+    kbd {
+        background-color: rgb(0, 119, 204);
+    }
+</style>    
+{% endblock css %}
+    
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+    <li class="breadcrumb-item active">API Instructions</li>
+{% endblock breadcrumb %}
+
+{% block main_content %}
+<div class="card m-4">
+    <div class="card-header"><h4>API Endpoints</h4></div>
+    <div class="card-body">
+        <p>Here's a list of all available endpoints:</p>
+        <ul>
+            <li><a href="#api" class="navlink"><code>/api/</code></a></li>
+            <li><a href="#boats" class="navlink"><code>/api/boats</code></a></li>
+            <li><a href="#locations" class="navlink"><code>/api/locations</code></a></li>
+            <li><a href="#settings" class="navlink"><code>/api/settings</code></a></li>
+            <li><a href="#addboat" class="navlink"><code>/api/boat/add</code></a></li>
+            <li><a href="#addrecord" class="navlink"><code>/api/record/add</code></a></li>
+        </ul>
+        
+    </div>
+</div>
+<section>
+    <div class="card m-4">
+        <div class="card-header"><a id="api"><h5><code>/api/</code> <kbd>GET</kbd></h5></a></div>
+        <div class="card-body">
+            <p>This API endpoint returns all reading records from all boats as a JSON. This is a sample returned JSON:</p>
+            <pre>
+[
+    {
+        "id": 169,
+        "heading_angle": 330.69196,
+        "pitch_angle": 6.9709105,
+        "roll_angle": 1.2797006,
+        "gyro_x": -7.3716583,
+        "gyro_y": -1.2862121,
+        "gyro_z": -7.3716583,
+        "accel_x": 0.57876396,
+        "accel_y": 0.37806597,
+        "accel_z": 9.882358,
+        "mag_x": -4.89375,
+        "mag_y": 46.66875,
+        "mag_z": -40.40625,
+        "latitude": 11.702779,
+        "longitude": 122.37611,
+        "altitude": 67.4,
+        "timestamp": "2022-06-28T03:32:19.656926Z",
+        "boat": 13
+    },
+    {
+        "id": 168,
+        "heading_angle": 88.31788,
+        "pitch_angle": 2.6048405,
+        "roll_angle": 1.0351582,
+        "gyro_x": -0.5337343,
+        "gyro_y": -0.4856107,
+        "gyro_z": -0.5337343,
+        "accel_x": -0.19920248,
+        "accel_y": 0.42831525,
+        "accel_z": 9.681062,
+        "mag_x": -34.0875,
+        "mag_y": -16.725,
+        "mag_z": -2.30625,
+        "latitude": 8.517533,
+        "longitude": 124.58397,
+        "altitude": 74.5,
+        "timestamp": "2022-06-25T05:16:51.045471Z",
+        "boat": 13
+    },
+    {
+        "id": 167,
+        "heading_angle": 88.334435,
+        "pitch_angle": 2.6625395,
+        "roll_angle": 1.0959189,
+        "gyro_x": -0.42873737,
+        "gyro_y": -0.41561276,
+        "gyro_z": -0.42873737,
+        "accel_x": -0.16091733,
+        "accel_y": 0.4642076,
+        "accel_z": 9.707382,
+        "mag_x": -33.75,
+        "mag_y": -16.59375,
+        "mag_z": -1.63125,
+        "latitude": 8.517533,
+        "longitude": 124.58397,
+        "altitude": 74.5,
+        "timestamp": "2022-06-25T05:15:46.784597Z",
+        "boat": 12
+    },
+    {
+        "id": 166,
+        "heading_angle": 88.28328,
+        "pitch_angle": 2.683456,
+        "roll_angle": 1.431177,
+        "gyro_x": -0.848725,
+        "gyro_y": -0.41561276,
+        "gyro_z": -0.848725,
+        "accel_x": -0.2638087,
+        "accel_y": 0.4546363,
+        "accel_z": 9.716953,
+        "mag_x": -33.91875,
+        "mag_y": -16.425001,
+        "mag_z": -1.3875,
+        "latitude": 8.517533,
+        "longitude": 124.58397,
+        "altitude": 74.5,
+        "timestamp": "2022-06-25T05:14:48.072275Z",
+        "boat": 11
+    },
+    {
+        "id": 165,
+        "heading_angle": 92.34777,
+        "pitch_angle": 2.6046505,
+        "roll_angle": 1.0013691,
+        "gyro_x": 0.4812358,
+        "gyro_y": -0.76560247,
+        "gyro_z": 0.4812358,
+        "accel_x": -0.19441684,
+        "accel_y": 0.44506502,
+        "accel_z": 9.712168,
+        "mag_x": -31.181252,
+        "mag_y": -20.34375,
+        "mag_z": -0.95625,
+        "latitude": 8.517527,
+        "longitude": 124.58397,
+        "altitude": 74.5,
+        "timestamp": "2022-06-25T05:13:46.674122Z",
+        "boat": 11
+    },
+    {
+        "id": 164,
+        "heading_angle": 73.828125,
+        "pitch_angle": 3.2613873,
+        "roll_angle": 2.980741,
+        "gyro_x": -0.25374255,
+        "gyro_y": -0.66060555,
+        "gyro_z": -0.25374255,
+        "accel_x": -0.5273183,
+        "accel_y": 0.5673981,
+        "accel_z": 9.697811,
+        "mag_x": -39.487503,
+        "mag_y": -1.125,
+        "mag_z": -3.8812501,
+        "latitude": 8.517527,
+        "longitude": 124.58397,
+        "altitude": 74.5,
+        "timestamp": "2022-06-25T05:12:49.340868Z",
+        "boat": 10
+    },
+    {
+        "id": 163,
+        "heading_angle": 73.8575,
+        "pitch_angle": 3.3527436,
+        "roll_angle": 2.8695455,
+        "gyro_x": -0.5337343,
+        "gyro_y": -0.4856107,
+        "gyro_z": -0.5337343,
+        "accel_x": -0.33559337,
+        "accel_y": 0.5602196,
+        "accel_z": 9.666704,
+        "mag_x": -40.237503,
+        "mag_y": -1.40625,
+        "mag_z": -3.1125002,
+        "latitude": 8.51753,
+        "longitude": 124.58397,
+        "altitude": 74.5,
+        "timestamp": "2022-06-25T05:11:47.474823Z",
+        "boat": 10
+    }
+]
+            </pre>
+            <p>However, you will be able to perform filtering on these records. The list below shows the query parameters that you can use to filter the records:</p>
+            <dl class="m-4">
+                <dt><code>boat=[int]</code></dt>
+                <dd>This query parameter filters the record by boat id. You can do <code>/api/?boat=2</code> to select the records from the boat with ID=2 only.</dd>
+                <dt><code>from=[dd/mm/yyyy]</code></dt>
+                <dd>Use this query parameter filter to select records starting from the specified date (inclusive) only.</dd>
+                <dt><code>to=[dd/mm/yyyy]</code></dt>
+                <dd>Use this query parameter filter to select records ending at the specified date (inclusive) only.</dd>
+            </dl>
+            <p>You may also combine the query parameters mentioned above. For example, the API call <code>/api/?boat=2&from=01/06/2022&to=30/06/2022</code> will return the reading records of boat ID 2 from June 1, 2022 to June 30, 2022 (inclusive).</p>
+            <a href="#top" class="btn btn-sm btn-info">Back to Top</a>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="card m-4">
+        <div class="card-header"><a id="boats"><h5><code>/api/boats</code> <kbd>GET</kbd></h5></a></div>
+        <div class="card-body">
+            <p>This API endpoint returns all the registered boats. Here's an example of the resulting JSON:</p>
+            <pre>
+[
+    {
+        "id": 23,
+        "name": "MV Palace",
+        "owner": "MaFe",
+        "owner_contact": "09981234567",
+        "length": 6.0,
+        "width": 4.0,
+        "height": 5.0,
+        "registered_at": "2022-06-22T01:30:08.061066Z",
+        "is_active": true
+    },
+    {
+        "id": 22,
+        "name": "M/V Martirez",
+        "owner": "Mary Ann",
+        "owner_contact": "09181234567",
+        "length": 6.0,
+        "width": 4.0,
+        "height": 5.0,
+        "registered_at": "2022-06-22T01:13:50.349531Z",
+        "is_active": true
+    },
+    {
+        "id": 21,
+        "name": "MZ",
+        "owner": "Zyrel",
+        "owner_contact": "09511235467",
+        "length": 7.0,
+        "width": 4.0,
+        "height": 5.0,
+        "registered_at": "2022-06-21T08:14:05.345949Z",
+        "is_active": true
+    }
+]
+            </pre>
+            <a href="#top" class="btn btn-sm btn-info">Back to Top</a>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="card m-4">
+        <div class="card-header"><a id="locations"><h5><code>/api/locations</code> <kbd>GET</kbd></h5></a></div>
+        <div class="card-body">
+            <p>This API endpoint returns the last known location of all the registered boats. Here's an example of the resulting JSON:</p>
+            <pre>
+[
+    {
+        "id": 22,
+        "name": "M/V Martirez",
+        "latitude": 11.70256,
+        "longitude": 122.376175,
+        "color": "red"
+    },
+    {
+        "id": 21,
+        "name": "MZ",
+        "latitude": 11.702561,
+        "longitude": 122.37618,
+        "color": "blue"
+    },
+    {
+        "id": 13,
+        "name": "MV Julu",
+        "latitude": 11.702779,
+        "longitude": 122.37611,
+        "color": "blue"
+    }
+]
+            </pre>
+            <p>The <code>color</code> attribute specifies the last known status of the boat. <b>Blue</b> indicates a normal status, <b>yellow</b> is at least 20% of the critical level, <b>orange</b> is 10% approaching the critical level, while <b>red</b> means the boat was on a critical level.</p>
+            <a href="#top" class="btn btn-sm btn-info">Back to Top</a>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="card m-4">
+        <div class="card-header"><a id="settings"><h5><code>/api/settings</code> <kbd>GET</kbd></h5></a></div>
+        <div class="card-body">
+            <p>This API endpoint returns the current settings set in the server. Here's an example of the resulting JSON:</p>
+            <pre>
+{
+    "id": 1,
+    "critical_pitch_angle": 20.0,
+    "critical_roll_angle": 15.0,
+    "reading_rate": 250.0,
+    "saving_rate": 60000.0,
+    "sms_rate": 3000000.0,
+    "post_rate": 60000.0,
+    "mobile_number": "+639690338822"
+}
+            </pre>
+            <p>The angles are all expressed in degrees, while the rates are expressed in milliseconds.</p>
+            <a href="#top" class="btn btn-sm btn-info">Back to Top</a>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="card m-4">
+        <div class="card-header"><a id="addboat"><h5><code>/api/boat/add</code> <kbd>POST</kbd></h5></a></div>
+        <div class="card-body">
+            <p>This API endpoint registers a boat into the system and returns the created record.</p>
+            <p>The following fields are needed to register a boat:</p>
+            <b>Fields</b>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td width="20%">name</td>
+                        <td>Identifies a boat. It should be a string of up to 100 characters long.</td>
+                    </tr>
+                    <tr>
+                        <td>owner</td>
+                        <td>The boat's owner. It should be a string of up to 250 characters long.</td>
+                    </tr>
+                    <tr>
+                        <td>owner_contact</td>
+                        <td><span class="text-muted">(optional)</span> The owner's contact number. Alerts will be sent to this number. It should be a string of up to 50 characters long.</td>
+                    </tr>
+                    <tr>
+                        <td>length</td>
+                        <td>The boat's length. It should be a positive real number expressed in meters.</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>The boat's width. It should be a positive real number expressed in meters.</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>The boat's height. It should be a positive real number expressed in meters.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Here's an example of the resulting JSON when the registration is successful:</p>
+            <pre>
+{
+    "id": 2,
+    "name": "Bangka",
+    "owner": "Juan dela Cruz",
+    "owner_contact": null,
+    "length": 5.0,
+    "width": 8.0,
+    "height": 6.5,
+    "registered_at": "2022-07-04T10:54:16.891365Z",
+    "is_active": true
+}
+            </pre>
+            <a href="#top" class="btn btn-sm btn-info">Back to Top</a>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="card m-4">
+        <div class="card-header"><a id="addrecord"><h5><code>/api/record/add</code> <kbd>POST</kbd></h5></a></div>
+        <div class="card-body">
+            <p>This API endpoint adds a reading of a boat into the system and returns the created record.</p>
+            <p>The following fields are needed to add a boat's reading:</p>
+            <b>Fields</b>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td width="20%">boat</td>
+                        <td>The boat's ID. It should be a positive whole number representing a boat.</td>
+                    </tr>
+                    <tr>
+                        <td>heading_angle</td>
+                        <td>The heading angle of the boat, expressed in degrees. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>pitch_angle</td>
+                        <td>The pitch angle of the boat, expressed in degrees. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>roll_angle</td>
+                        <td>The roll angle of the boat, expressed in degrees. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>gyro_x</td>
+                        <td><span class="text-muted">(Yaw Rate)</span> The gyroscope reading in the x-axis, expressed in degrees per second. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>gyro_y</td>
+                        <td><span class="text-muted">(Roll Rate)</span> The gyroscope reading in the y-axis, expressed in degrees per second. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>gyro_z</td>
+                        <td><span class="text-muted">(Pitch Rate)</span> The gyroscope reading in the z-axis, expressed in degrees per second. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>accel_x</td>
+                        <td>The accelerometer reading in the x-axis, expressed in meters per second. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>accel_y</td>
+                        <td>The accelerometer reading in the y-axis, expressed in meters per second. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>accel_z</td>
+                        <td>The accelerometer reading in the z-axis, expressed in meters per second. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>mag_x</td>
+                        <td>The magnetometer reading in the x-axis, expressed in micro-Tesla. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>mag_y</td>
+                        <td>The magnetometer reading in the y-axis, expressed in micro-Tesla. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>mag_z</td>
+                        <td>The magnetometer reading in the z-axis, expressed in micro-Tesla. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>latitude</td>
+                        <td>The current location's latitude, expressed in decimal degrees. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>longitude</td>
+                        <td>The current location's longitude, expressed in decimal degrees. It should be a positive real number.</td>
+                    </tr>
+                    <tr>
+                        <td>altitude</td>
+                        <td>The current location's altitude, expressed in meters. It should be a positive real number.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Here's an example of the resulting JSON when the posting is successful:</p>
+            <pre>
+{
+    "id": 4,
+    "heading_angle": 56.23,
+    "pitch_angle": 5.2,
+    "roll_angle": 1.0,
+    "gyro_x": 0.1,
+    "gyro_y": 0.9,
+    "gyro_z": 2.3,
+    "accel_x": 3.3,
+    "accel_y": 20.5,
+    "accel_z": 1.1,
+    "mag_x": 9.56,
+    "mag_y": 0.0,
+    "mag_z": 0.1,
+    "latitude": 122.68,
+    "longitude": 11.22,
+    "altitude": 20.0,
+    "timestamp": "2022-07-04T11:52:39.741458Z",
+    "boat": 2
+}
+            </pre>
+            <a href="#top" class="btn btn-sm btn-info">Back to Top</a>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}
+
+
+{% block js %}
+    <script src="{% static 'js/formatter.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $("#menu_instructions").addClass("active");
+
+            var divId;
+
+            $('.navlink').click(function(){    
+                divId = $(this).attr('href');
+                console.log(divId)
+                $('html, body').animate({
+                    scrollTop: $(divId).offset().top - 100
+                }, 100);
+            });
+        })
+    </script>
+{% endblock js %}

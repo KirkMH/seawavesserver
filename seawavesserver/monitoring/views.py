@@ -29,7 +29,12 @@ class BoatDTListView(ServerSideDatatableView):
     
 def record_listview(request, pk):
     request.session['boat_id'] = pk
-    context = {'boat': Boat.objects.get(pk=pk)}
+    setting = Setting.objects.last()
+    print(f"setting.post_rate: {setting.post_rate}")
+    context = {
+        'boat': Boat.objects.get(pk=pk),
+        'post_interval': setting.post_rate
+    }
     return render(request, 'monitoring/boat_record.html', context)
 
 class RecordDTListView(ServerSideDatatableView):
@@ -45,3 +50,6 @@ class RecordDTListView(ServerSideDatatableView):
                         'mag_x', 'mag_y', 'mag_z']
         return super().get(request, *args, **kwargs)
         
+
+def instructions_view(request):
+    return render(request, 'monitoring/api_instructions.html')

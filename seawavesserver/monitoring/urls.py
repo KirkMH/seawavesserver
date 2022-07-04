@@ -7,4 +7,5 @@ urlpatterns = [
     path('boats/dt', views.BoatDTListView.as_view(), name='boat_dtlist'),
     path('boats/<int:pk>/view', views.record_listview, name='record_list'),
     path('boats/<int:pk>/view/dt', views.RecordDTListView.as_view(), name='record_dtlist'),
+    path('instructions/', views.instructions_view, name='instructions_page'),
 ]

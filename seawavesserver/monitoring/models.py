@@ -8,8 +8,7 @@ from datetime import date
 class Boat(models.Model):
     name = models.CharField(
         _("Boat's Name"), 
-        max_length=100,
-        unique=True
+        max_length=100
     )
     owner = models.CharField(
         _("Owner's Name"), 
@@ -24,15 +23,18 @@ class Boat(models.Model):
     )
     length = models.FloatField(
         _("Boat's Length"),
-        help_text='(in meters)'
+        help_text='(in meters)',
+        validators=[MinValueValidator(0)]
     )
     width = models.FloatField(
         _("Boat's Width"),
-        help_text='(in meters)'
+        help_text='(in meters)',
+        validators=[MinValueValidator(0)]
     )
     height = models.FloatField(
         _("Boat's Height"),
-        help_text='(in meters)'
+        help_text='(in meters)',
+        validators=[MinValueValidator(0)]
     )
     registered_at = models.DateTimeField(
         _("Registered at"), 
@@ -46,6 +48,7 @@ class Boat(models.Model):
 
     class Meta:
         ordering = ['-registered_at']
+        unique_together = ('name', 'owner',)
 
     def __str__(self):
         return self.name
@@ -63,63 +66,78 @@ class Record(models.Model):
     )
     heading_angle = models.FloatField(
         _("Heading Angle"),
-        help_text='(in degrees)'
+        help_text='(in degrees)',
+        validators=[MinValueValidator(0)]
     )
     pitch_angle = models.FloatField(
         _("Pitch Angle"),
-        help_text='(in degrees)'
+        help_text='(in degrees)',
+        validators=[MinValueValidator(0)]
     )
     roll_angle = models.FloatField(
         _("Roll Angle"),
-        help_text='(in degrees)'
+        help_text='(in degrees)',
+        validators=[MinValueValidator(0)]
     )
     gyro_x = models.FloatField(
         _("Gyroscope-X (Yaw Rate)"),
-        help_text='(in degrees per second)'
+        help_text='(in degrees per second)',
+        validators=[MinValueValidator(0)]
     )
     gyro_y = models.FloatField(
         _("Gyroscope-Y (Roll Rate)"),
-        help_text='(in degrees per second)'
+        help_text='(in degrees per second)',
+        validators=[MinValueValidator(0)]
     )
     gyro_z = models.FloatField(
         _("Gyroscope-Z (Pitch Rate)"),
-        help_text='(in degrees per second)'
+        help_text='(in degrees per second)',
+        validators=[MinValueValidator(0)]
     )
     accel_x = models.FloatField(
         _("Acceleration-X"),
-        help_text='(in meters per second)'
+        help_text='(in meters per second)',
+        validators=[MinValueValidator(0)]
     )
     accel_y = models.FloatField(
         _("Acceleration-Y"),
-        help_text='(in meters per second)'
+        help_text='(in meters per second)',
+        validators=[MinValueValidator(0)]
     )
     accel_z = models.FloatField(
         _("Acceleration-Z"),
-        help_text='(in meters per second)'
+        help_text='(in meters per second)',
+        validators=[MinValueValidator(0)]
     )
     mag_x = models.FloatField(
         _("Magnetometer-X"),
-        help_text='(in micro-Tesla)'
+        help_text='(in micro-Tesla)',
+        validators=[MinValueValidator(0)]
     )
     mag_y = models.FloatField(
         _("Magnetometer-Y"),
-        help_text='(in micro-Tesla)'
+        help_text='(in micro-Tesla)',
+        validators=[MinValueValidator(0)]
     )
     mag_z = models.FloatField(
         _("Magnetometer-Z"),
-        help_text='(in micro-Tesla)'
+        help_text='(in micro-Tesla)',
+        validators=[MinValueValidator(0)]
     )
     latitude = models.FloatField(
         _("Latitude"),
-        help_text='(in degrees)'
+        help_text='(in degrees)',
+        validators=[MinValueValidator(0)]
     )
     longitude = models.FloatField(
         _("Longitude"),
-        help_text='(in degrees)'
+        help_text='(in degrees)',
+        validators=[MinValueValidator(0)]
     )
     altitude = models.FloatField(
         _("Altitude"),
-        help_text='(in meters)'
+        help_text='(in meters)',
+        validators=[MinValueValidator(0)]
     )
     timestamp = models.DateTimeField(
         _("Timestamp"), 

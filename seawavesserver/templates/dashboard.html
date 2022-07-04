@@ -65,12 +65,12 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{{ setting.mobile_number }}</h3>
+                <h3>{% widthratio setting.post_rate 1000 1 %} <sup style="font-size: 20px">seconds</sup></h3>
 
-                <p>Mobile Number Alarm</p>
+                <p>Posting Interval</p>
               </div>
               <div class="icon">
-                <i class="fas fa-mobile-screen"></i>
+                <i class="fas fa-clock"></i>
               </div>
             </div>
           </div>
@@ -242,6 +242,7 @@
             icon: iconBase + loc.color + ".png", 
             map: map,
           });
+          locations[i].marker = marker;
           
           // Add a click listener for each marker, and set up the info window.
           marker.addListener("click", () => {
@@ -257,7 +258,9 @@
     });
   }
 
-  // window.initMap = initMap;
+  function updateMap() {
+    // TODO: must refresh the map as the boats move
+  }
 
   $(document).ready(function() {
       $("#menu_dashboard").addClass("active");
