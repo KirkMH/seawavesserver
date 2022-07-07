@@ -30,7 +30,6 @@ class BoatDTListView(ServerSideDatatableView):
 def record_listview(request, pk):
     request.session['boat_id'] = pk
     setting = Setting.objects.last()
-    print(f"setting.post_rate: {setting.post_rate}")
     context = {
         'boat': Boat.objects.get(pk=pk),
         'post_interval': setting.post_rate

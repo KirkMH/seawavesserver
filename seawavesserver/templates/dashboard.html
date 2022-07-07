@@ -208,6 +208,7 @@
     //   { name: "MZ", latitude: 11.702561, longitude: 122.37618, color:"red" },
     // ];
   var map;
+  var markers = new Array()
   function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 11.70256, lng: 122.376175},
@@ -231,6 +232,7 @@
 
         console.log(map);
         // The markers
+        resetMarkers()
         const iconBase = "/static/img/dot_";
         for (let i = 0; i < locations.length; i++) {
           const loc = locations[i];
@@ -250,6 +252,8 @@
             infoWindow.setContent(marker.getTitle());
             infoWindow.open(marker.getMap(), marker);
           });
+
+          markers.push(marker);
         }
       },
       error: function (errorMessage) { // error callback 
@@ -258,8 +262,11 @@
     });
   }
 
-  function updateMap() {
-    // TODO: must refresh the map as the boats move
+  function resetMarkers() {
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers = [];
   }
 
   $(document).ready(function() {
@@ -271,6 +278,10 @@
             message: $(this).data('details')
         });
       });
+
+      const reloadInterval = parseInt("{{setting.post_rate}}");
+      console.log(reloadInterval);
+      setInterval(loadMap, reloadInterval);
   })
 </script>
 

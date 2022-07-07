@@ -92,7 +92,6 @@
             });
 
             const reloadInterval = parseInt("{{post_interval}}");
-            console.log(reloadInterval);
             setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, reloadInterval);
             $("#menu_boats").addClass("active");
         })
