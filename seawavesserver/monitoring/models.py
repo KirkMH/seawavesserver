@@ -141,12 +141,14 @@ class Record(models.Model):
         setting = Setting.objects.last()
         c_pitch = setting.critical_pitch_angle
         c_roll = setting.critical_roll_angle
+        pitch_angle = abs(self.pitch_angle)
+        roll_angle = abs(self.roll_angle)
         color = None
-        if self.pitch_angle >= c_pitch or self.roll_angle >= c_roll:
+        if pitch_angle >= c_pitch or self.roll_angle >= c_roll:
             color = "red"
-        elif self.pitch_angle >= (c_pitch * 0.9) or self.roll_angle >= (c_roll * 0.9):
+        elif pitch_angle >= (c_pitch * 0.9) or roll_angle >= (c_roll * 0.9):
             color = "orange"
-        elif self.pitch_angle >= (c_pitch * 0.8) or self.roll_angle >= (c_roll * 0.8):
+        elif pitch_angle >= (c_pitch * 0.8) or roll_angle >= (c_roll * 0.8):
             color = "yellow"
         else:
             color = "blue"
