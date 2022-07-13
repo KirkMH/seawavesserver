@@ -27,27 +27,27 @@ class BoatLocationSerializer(serializers.ModelSerializer):
     roll = serializers.SerializerMethodField('getRoll')
 
     def getLatitude(self, boat):
-        rec = Record.objects.filter(boat=boat).last()
+        rec = Record.objects.filter(boat=boat).first()
         return rec.latitude if rec != None else None
 
     def getLongitude(self, boat):
-        rec = Record.objects.filter(boat=boat).last()
+        rec = Record.objects.filter(boat=boat).first()
         return rec.longitude if rec != None else None
 
     def getColor(self, boat):
-        rec = Record.objects.filter(boat=boat).last()
+        rec = Record.objects.filter(boat=boat).first()
         return rec.getColor() if rec != None else None
 
     def getHeading(self, boat):
-        rec = Record.objects.filter(boat=boat).last()
+        rec = Record.objects.filter(boat=boat).first()
         return rec.heading_angle if rec != None else None
 
     def getPitch(self, boat):
-        rec = Record.objects.filter(boat=boat).last()
+        rec = Record.objects.filter(boat=boat).first()
         return rec.pitch_angle if rec != None else None
         
     def getRoll(self, boat):
-        rec = Record.objects.filter(boat=boat).last()
+        rec = Record.objects.filter(boat=boat).first()
         return rec.roll_angle if rec != None else None
 
     class Meta:
