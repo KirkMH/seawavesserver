@@ -52,4 +52,4 @@ class BoatLocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Boat
-        fields = ('id', 'name', 'latitude', 'longitude', 'color')
+        fields = ('id', 'name', 'latitude', 'longitude', 'color', 'heading', 'pitch', 'roll')
