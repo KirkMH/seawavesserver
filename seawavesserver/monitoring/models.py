@@ -138,7 +138,7 @@ class Record(models.Model):
         _("Altitude"),
         help_text='(in meters)',
         validators=[MinValueValidator(0)],
-        null=True, blank=True, default=None
+        default=0
     )
     timestamp = models.DateTimeField(
         _("Timestamp"), 
