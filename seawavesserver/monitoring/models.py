@@ -144,7 +144,7 @@ class Record(models.Model):
         pitch_angle = abs(self.pitch_angle)
         roll_angle = abs(self.roll_angle)
         color = None
-        if pitch_angle >= c_pitch or self.roll_angle >= c_roll:
+        if pitch_angle >= c_pitch or roll_angle >= c_roll:
             color = "red"
         elif pitch_angle >= (c_pitch * 0.9) or roll_angle >= (c_roll * 0.9):
             color = "orange"
