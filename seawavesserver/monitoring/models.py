@@ -67,77 +67,62 @@ class Record(models.Model):
     heading_angle = models.FloatField(
         _("Heading Angle"),
         help_text='(in degrees)',
-        validators=[MinValueValidator(0)]
     )
     pitch_angle = models.FloatField(
         _("Pitch Angle"),
         help_text='(in degrees)',
-        validators=[MinValueValidator(0)]
     )
     roll_angle = models.FloatField(
         _("Roll Angle"),
         help_text='(in degrees)',
-        validators=[MinValueValidator(0)]
     )
     gyro_x = models.FloatField(
         _("Gyroscope-X (Yaw Rate)"),
         help_text='(in degrees per second)',
-        validators=[MinValueValidator(0)]
     )
     gyro_y = models.FloatField(
         _("Gyroscope-Y (Roll Rate)"),
         help_text='(in degrees per second)',
-        validators=[MinValueValidator(0)]
     )
     gyro_z = models.FloatField(
         _("Gyroscope-Z (Pitch Rate)"),
         help_text='(in degrees per second)',
-        validators=[MinValueValidator(0)]
     )
     accel_x = models.FloatField(
         _("Acceleration-X"),
         help_text='(in meters per second)',
-        validators=[MinValueValidator(0)]
     )
     accel_y = models.FloatField(
         _("Acceleration-Y"),
         help_text='(in meters per second)',
-        validators=[MinValueValidator(0)]
     )
     accel_z = models.FloatField(
         _("Acceleration-Z"),
         help_text='(in meters per second)',
-        validators=[MinValueValidator(0)]
     )
     mag_x = models.FloatField(
         _("Magnetometer-X"),
         help_text='(in micro-Tesla)',
-        validators=[MinValueValidator(0)]
     )
     mag_y = models.FloatField(
         _("Magnetometer-Y"),
         help_text='(in micro-Tesla)',
-        validators=[MinValueValidator(0)]
     )
     mag_z = models.FloatField(
         _("Magnetometer-Z"),
         help_text='(in micro-Tesla)',
-        validators=[MinValueValidator(0)]
     )
     latitude = models.FloatField(
         _("Latitude"),
         help_text='(in degrees)',
-        validators=[MinValueValidator(0)]
     )
     longitude = models.FloatField(
         _("Longitude"),
         help_text='(in degrees)',
-        validators=[MinValueValidator(0)]
     )
     altitude = models.FloatField(
         _("Altitude"),
         help_text='(in meters)',
-        validators=[MinValueValidator(0)],
         default=0
     )
     timestamp = models.DateTimeField(
