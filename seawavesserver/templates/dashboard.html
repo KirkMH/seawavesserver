@@ -233,7 +233,7 @@
           console.log(loc);
           const marker = new google.maps.Marker({
             position: {lat: loc.latitude, lng: loc.longitude},
-            title: loc.name,
+            title: loc.name + "\nHeading: " + loc.heading + "\nPitch: " + loc.pitch + "\nRoll: " + loc.roll,
             label: loc.name,
             icon: iconBase + loc.color + ".png", 
             map: map,
