@@ -205,8 +205,8 @@
   var markers = new Array()
   function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 11.70256, lng: 122.376175},
-      zoom: 20
+      center: { lat: 11.967422, lng: 121.9178794},
+      zoom: 14
     });
 
     loadMap();
@@ -273,7 +273,7 @@
         });
       });
 
-      const reloadInterval = parseInt("{{setting.post_rate}}");
+      const reloadInterval = 500; //parseInt("{{setting.post_rate}}");
       console.log(reloadInterval);
       setInterval(loadMap, reloadInterval);
   })
