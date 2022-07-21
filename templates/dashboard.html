@@ -273,7 +273,7 @@
         });
       });
 
-      const reloadInterval = 500; // half a second. previously: parseInt("{{setting.post_rate}}");
+      const reloadInterval = 1000; // 1 second. previously: parseInt("{{setting.post_rate}}");
       console.log(reloadInterval);
       setInterval(loadMap, reloadInterval);
   })
