@@ -201,6 +201,7 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 <script>
+  var intervalVar;
   var map;
   var markers = new Array()
   function initMap() {
@@ -245,6 +246,11 @@
             infoWindow.close();
             infoWindow.setContent(marker.getTitle());
             infoWindow.open(marker.getMap(), marker);
+            infoWindow.addListener('closeclick', ()=>{
+              startTimer();
+              infoWindow.close();
+            });
+            clearInterval(intervalVar);
           });
 
           markers.push(marker);
@@ -263,6 +269,13 @@
     markers = [];
   }
 
+  function startTimer() {
+    const reloadInterval = 1000; // 1 second. previously: parseInt("{{setting.post_rate}}");
+    console.log(reloadInterval);
+      
+    intervalVar = setInterval(loadMap, reloadInterval);
+  }
+
   $(document).ready(function() {
       $("#menu_dashboard").addClass("active");
 
@@ -272,10 +285,7 @@
             message: $(this).data('details')
         });
       });
-
-      const reloadInterval = 500; //parseInt("{{setting.post_rate}}");
-      console.log(reloadInterval);
-      setInterval(loadMap, reloadInterval);
+      startTimer();
   })
 </script>
 

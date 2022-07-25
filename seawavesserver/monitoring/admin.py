@@ -8,8 +8,15 @@ admin.site.site_title  =  'SEAWAVES Server'
 admin.site.index_title  =  'System Administrator'
 
 
+# custom action for admin to perform stock adjustment
+@admin.action(description='Deactivate selected boats')
+def deactivate_boats(modeladmin, request, queryset):
+    for req in queryset:
+        req.is_active = False
+        req.save()
 class BoatAdmin(admin.ModelAdmin):
     list_display = ('name', 'owner', 'owner_contact', 'length', 'width', 'height', 'registered_at', 'is_active')
+    actions = [deactivate_boats]
 admin.site.register(Boat, BoatAdmin)
 
 class RecordAdmin(admin.ModelAdmin):
