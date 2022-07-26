@@ -121,7 +121,8 @@
     });
   }
 
-  $('#btnLoad').click(function() {
+  $('#btLoad').click(function() {\
+    console.log("Clicked!");
     var boat_id = $('#boat_id').val();
     console.log("Boat id: " + boat_id);
     loadMap(boat_id);
