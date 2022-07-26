@@ -181,7 +181,8 @@
   }
 
   function resetMarker() {
-    marker.setMap(null);
+    if (marker != null)
+      marker.setMap(null);
   }
 
   function startTimer() {
