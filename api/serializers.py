@@ -8,9 +8,19 @@ class BoatSerializer(serializers.ModelSerializer):
 
 
 class RecordSerializer(serializers.ModelSerializer):
+    color = serializers.SerializerMethodField('getColor')
+
+    def getColor(self, pk):
+        rec = Record.objects.filter(pk=pk).first()
+        return rec.getColor() if rec != None else None
+
     class Meta:
         model = Record
-        fields = '__all__'
+        fields = ['pk', 'timestamp', 'latitude', 'longitude', 'altitude', 
+                    'heading_angle', 'pitch_angle', 'roll_angle', 
+                    'gyro_x', 'gyro_y', 'gyro_z', 
+                    'accel_x', 'accel_y', 'accel_z', 
+                    'mag_x', 'mag_y', 'mag_z', 'color']
 
 
 class SettingSerializer(serializers.ModelSerializer):

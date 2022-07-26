@@ -151,9 +151,9 @@
 
   function setMarker() {
     const loc = locations[index];
-    index++;
-    if (index >= locations.length)
-      index = 0;
+    index--;
+    if (index < 0)
+      index = locations.length - 1;
 
     console.log(loc);
     const iconBase = "/static/img/dot_";
@@ -189,7 +189,7 @@
     const reloadInterval = 1000; // 1 second. previously: parseInt("{{setting.post_rate}}");
     console.log(reloadInterval);
       
-    index = 0;
+    index = locations.length - 1;
     intervalVar = setInterval(setMarker, reloadInterval);
   }
 
