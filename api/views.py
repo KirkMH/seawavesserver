@@ -84,10 +84,10 @@ def getBoatRoute(request, pk):
     '''
     count = 50
 
-    qpCount = request.query_params.get('count')
-    if qpCount != None:
-        count = int(qpCount)
-    records = Record.objects.filter(boat=pk)[:count]
+    # qpCount = request.query_params.get('count')
+    # if qpCount != None:
+    #     count = int(qpCount)
+    records = Record.objects.filter(boat=pk).order_by('-pk')[:count]
     
     serializer = RecordSerializer(records, many=True)
     return Response(serializer.data)
