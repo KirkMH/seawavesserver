@@ -51,14 +51,14 @@
               <div class="card-body">
                 <form method="get">
                   <div class="form-group">
-                    <label for="boat_id">Boat Name:</label>
-                    <select name="boat_id" id="boat_id">
+                    <label class="form-control" for="boat_id">Boat Name:</label>
+                    <select class="form-control" name="boat_id" id="boat_id">
                       {% for boat in boats %}
-                      <option value="boat.pk">{{boat.name}}</option>
+                      <option value="{{boat.pk}}" >{{boat.name}}</option>
                       {% endfor %}
                     </select>
                   </div>
-                  <button id="btLoad" class="btn btn-primary">Load</button>
+                  <button type="button" id="btLoad" class="btn btn-primary">Load</button>
                 </form>
               </div>
             </div>
