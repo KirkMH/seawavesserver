@@ -51,7 +51,7 @@
               <div class="card-body">
                 <form method="get">
                   <div class="form-group">
-                    <label class="form-control" for="boat_id">Boat Name:</label>
+                    <label for="boat_id">Boat Name:</label>
                     <select class="form-control" name="boat_id" id="boat_id">
                       {% for boat in boats %}
                       <option value="{{boat.pk}}" >{{boat.name}}</option>
@@ -121,7 +121,7 @@
     });
   }
 
-  $('#btLoad').click(function() {\
+  $('#btLoad').click(function() {
     console.log("Clicked!");
     var boat_id = $('#boat_id').val();
     console.log("Boat id: " + boat_id);
