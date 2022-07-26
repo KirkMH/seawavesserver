@@ -8,4 +8,5 @@ urlpatterns = [
     path('settings', views.getSettings),
     path('', views.getRecords),
     path('record/add', views.addRecord),
+    path('boat/<int:pk>/route', views.getBoatRoute),
 ]

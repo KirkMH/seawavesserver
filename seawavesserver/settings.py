@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'monitoring',
+    'reporting',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_seawavesserver',
         'USER': 'root',
-        'PASSWORD': 'p@$$w0rD',
+        'PASSWORD': 'admin',
         'HOST': 'localhost'
     }
 }

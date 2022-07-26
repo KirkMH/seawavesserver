@@ -17,7 +17,7 @@ class BoatLocationsListView(generics.ListAPIView):
     '''
     Returns the list of boats with their current location
     '''
-    queryset = Boat.objects.filter(is_active=True)
+    queryset = Boat.objects.filter(is_active=True, record__isnull=False).distinct()
     serializer_class = BoatLocationSerializer
 
 @api_view(['POST'])
@@ -74,5 +74,20 @@ def addRecord(request):
     else:
         print(f"Add Record error: {serializer.errors}")
         return Response(serializer.errors)
-        
+
     
+@api_view(['GET'])
+def getBoatRoute(request, pk):
+    '''
+    Returns the last 50 records, or the specified number of records,
+    of the boat's route.
+    '''
+    count = 50
+
+    qpCount = request.query_params.get('count')
+    if qpCount != None:
+        count = int(qpCount)
+    records = Record.objects.filter(boat=pk)[:count]
+    
+    serializer = RecordSerializer(records, many=True)
+    return Response(serializer.data)

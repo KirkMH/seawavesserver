@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Boat Route{% endblock title %}
+
+
+{% block css %}
+<style>
+  .bulletin-title {
+    font-size: larger;
+    cursor: pointer;
+  }
+  .bulletin-info {
+    font-size: small;
+  }
+  #map {
+    height: 400px;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
+  }
+</style>
+{% endblock css %}  
+
+{% block wrapper %}
+
+{% endblock wrapper %}
+  
+{% block page_title %}Dashboard{% endblock page_title %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item active">Boat Route</li>
+{% endblock breadcrumb %}
+    
+
+{% block main_content %}   
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+        <!-- Map row -->
+        <div class="row">
+          <!-- Left col -->
+          <section class="col-lg-12 connectedSortable">
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="card-title">Boat Selection</div>
+              </div>
+              <div class="card-body">
+                <form method="get">
+                  <div class="form-group">
+                    <label for="boat_id">Boat Name:</label>
+                    <select name="boat_id" id="boat_id">
+                      {% for boat in boats %}
+                      <option value="boat.pk">boat.name</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <button id="btLoad" class="btn btn-primary">Load</button>
+                </form>
+              </div>
+            </div>
+            <!-- Map -->
+            <div class="card">
+              <div class="card-header border-0">
+                <h3 class="card-title">
+                  <i class="fas fa-map-marked mr-1"></i>
+                  Map
+                </h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body table-responsive">
+                <div id="map"></div>
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+            
+          </section>
+          <!-- /.Left col -->
+        </div>
+        <!-- /.row (main row) -->
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    
+{% endblock main_content %}
+
+
+{% block js %}
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- bootboxjs -->
+<script src="{% static 'js/bootbox.all.min.js' %}"></script>
+
+<!-- Google Maps -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<script>
+  var intervalVar;
+  var map;
+  var marker;
+  var index = 0;
+  var locations = [];
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 11.967422, lng: 121.9178794},
+      zoom: 14
+    });
+  }
+
+  $('#btnLoad').click(function() {
+    var boat_id = $('#boat_id').val();
+    console.log("Boat id: " + boat_id);
+    loadMap(boat_id);
+  })
+   
+  function loadMap(boat_id) {
+    $.ajax({
+      type: "GET",
+      url: '/api/boat/' + boat_id + '/route',
+      dataType: 'json', // type of response data
+      success: function (data) {   // success callback function
+        console.log(data);
+        locations = data;
+        
+        // Create an info window to share between markers.
+        const infoWindow = new google.maps.InfoWindow();
+
+        resetMarker();
+        startTimer();
+      },
+      error: function (errorMessage) { // error callback 
+          console.log('Error: ' + errorMessage);
+      }
+    });
+  }
+
+  function setMarker() {
+    const loc = locations[index];
+    index++;
+    if (index >= locations.length)
+      index = 0;
+
+    console.log(loc);
+    const iconBase = "/static/img/dot_";
+
+    const newMarker = new google.maps.Marker({
+      position: {lat: loc.latitude, lng: loc.longitude},
+      title: "<b>" + loc.name + "</b><br>Heading: " + loc.heading + "<br>Pitch: " + loc.pitch + "<br>Roll: " + loc.roll,
+      label: loc.name,
+      icon: iconBase + loc.color + ".png", 
+      map: map,
+    });
+    marker = newMarker;
+    
+    // Add a click listener for each marker, and set up the info window.
+    marker.addListener("click", () => {
+      infoWindow.close();
+      infoWindow.setContent(marker.getTitle());
+      infoWindow.open(marker.getMap(), marker);
+      infoWindow.addListener('closeclick', ()=>{
+        startTimer();
+        infoWindow.close();
+      });
+      clearInterval(intervalVar);
+    });
+  }
+
+  function resetMarker() {
+    marker.setMap(null);
+  }
+
+  function startTimer() {
+    const reloadInterval = 1000; // 1 second. previously: parseInt("{{setting.post_rate}}");
+    console.log(reloadInterval);
+      
+    index = 0;
+    intervalVar = setInterval(setMarker, reloadInterval);
+  }
+
+  $(document).ready(function() {
+      $("#menu_dashboard").addClass("active");
+
+      $(".bulletin-title").click(function() {
+        bootbox.dialog({
+            title: $(this).text(),
+            message: $(this).data('details')
+        });
+      });
+  })
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly"></script>
+
+{% endblock js %}
+  
