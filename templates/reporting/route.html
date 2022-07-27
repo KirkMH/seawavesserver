@@ -131,7 +131,7 @@
   function loadMap(boat_id) {
     $.ajax({
       type: "GET",
-      url: '/api/boat/' + boat_id + '/route',
+      url: '/api/boat/route?boat=' + boat_id,
       dataType: 'json', // type of response data
       success: function (data) {   // success callback function
         console.log(data);

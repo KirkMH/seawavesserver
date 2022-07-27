@@ -77,18 +77,19 @@ def addRecord(request):
 
     
 @api_view(['GET'])
-def getBoatRoute(request, pk):
+def getBoatRoute(request):
     '''
     Returns the last 50 records, or the specified number of records,
     of the boat's route.
     '''
     count = 50
+    qpBoat = request.query_params.get('boat')
 
     # qpCount = request.query_params.get('count')
     # if qpCount != None:
     #     count = int(qpCount)
-    boat = Boat.objects.get(pk=pk)
-    records = Record.objects.filter(boat=boat).order_by('-pk')[:count]
+    boat = Boat.objects.get(pk=qpBoat)
+    records = Record.objects.filter(boat=qpBoat).order_by('-pk')[:count]
     
     serializer = RecordSerializer(records, many=True)
     return Response(serializer.data)
