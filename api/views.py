@@ -85,9 +85,9 @@ def getBoatRoute(request):
     count = 50
     qpBoat = request.query_params.get('boat')
 
-    # qpCount = request.query_params.get('count')
-    # if qpCount != None:
-    #     count = int(qpCount)
+    qpCount = request.query_params.get('count')
+    if qpCount != None:
+        count = int(qpCount)
     boat = Boat.objects.get(pk=qpBoat)
     records = Record.objects.filter(boat=qpBoat).order_by('-timestamp')[:count]
     
