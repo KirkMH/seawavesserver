@@ -90,6 +90,7 @@ def getBoatRoute(request):
     #     count = int(qpCount)
     boat = Boat.objects.get(pk=qpBoat)
     records = Record.objects.filter(boat=qpBoat).order_by('-pk')[:count]
+    ordered = records.order_by('timestamp')
     
-    serializer = RecordSerializer(records, many=True)
+    serializer = RecordSerializer(ordered, many=True)
     return Response(serializer.data)
