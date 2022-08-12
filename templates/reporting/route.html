@@ -113,12 +113,15 @@
   var marker;
   var index = 0;
   var locations = [];
+  var infoWindow;
 
   function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 11.967422, lng: 121.9178794},
       zoom: 14
     });
+    // Create an info window to share between markers.
+    infoWindow = new google.maps.InfoWindow();
   }
 
   $('#btLoad').click(function() {
@@ -136,9 +139,6 @@
       success: function (data) {   // success callback function
         console.log(data);
         locations = data;
-        
-        // Create an info window to share between markers.
-        const infoWindow = new google.maps.InfoWindow();
 
         resetMarker();
         startTimer();
@@ -157,13 +157,24 @@
 
     console.log(loc);
     resetMarker();
-    const iconBase = "/static/img/dot_";
+    const iconBase = "{% static '/img/boat_black.svg' %}"; // "/static/img/dot_";
+    console.log(iconBase);
+
+    const img = {
+      url: "{% static '/img/boat_black.svg' %}",
+      size: new google.maps.Size(32, 32),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(16, 16)
+    }
 
     const newMarker = new google.maps.Marker({
       position: {lat: loc.latitude, lng: loc.longitude},
       title: "<b>" + loc.name + "</b><br>Heading: " + loc.heading + "<br>Pitch: " + loc.pitch + "<br>Roll: " + loc.roll,
       label: loc.name,
-      icon: iconBase + loc.color + ".png", 
+      icon: "{% static '/img/icon_boat_black.svg' %}", // iconBase + loc.color + ".png", 
+      size: new google.maps.Size(32, 32),
+      scaledSize: new google.maps.Size(32, 32),
+      rotation: loc.heading,
       map: map,
     });
     marker = newMarker;
