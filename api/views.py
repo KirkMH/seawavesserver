@@ -82,7 +82,7 @@ def getBoatRoute(request):
     Returns the last 50 records, or the specified number of records,
     of the boat's route.
     '''
-    count = 50
+    count = 100
     qpBoat = request.query_params.get('boat')
 
     qpCount = request.query_params.get('count')
