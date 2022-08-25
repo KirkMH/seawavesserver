@@ -7,6 +7,12 @@ class BoatSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AddRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Record
+        fields = '__all__'
+
+
 class RecordSerializer(serializers.ModelSerializer):
     color = serializers.SerializerMethodField('getColor')
 
