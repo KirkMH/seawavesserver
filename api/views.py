@@ -66,6 +66,7 @@ def addRecord(request):
     '''
     Adds a reading from a  boat.
     '''
+    print(f"Received data: {request.data}")
     serializer = AddRecordSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
