@@ -126,9 +126,13 @@ class Record(models.Model):
         default=0
     )
     timestamp = models.DateTimeField(
-        _("Timestamp"), 
+        _("Time Received"), 
         auto_now=False, 
-        auto_now_add=False
+        auto_now_add=True
+    )
+    sent_timestamp = models.CharField(
+        _("Time Sent"), 
+        max_length=25
     )
 
     class Meta:

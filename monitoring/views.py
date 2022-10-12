@@ -46,7 +46,7 @@ class RecordDTListView(ServerSideDatatableView):
                         'heading_angle', 'pitch_angle', 'roll_angle', 
                         'gyro_x', 'gyro_y', 'gyro_z', 
                         'accel_x', 'accel_y', 'accel_z', 
-                        'mag_x', 'mag_y', 'mag_z']
+                        'mag_x', 'mag_y', 'mag_z', 'sent_timestamp']
         return super().get(request, *args, **kwargs)
         
 
