@@ -128,7 +128,7 @@ class Record(models.Model):
     timestamp = models.DateTimeField(
         _("Timestamp"), 
         auto_now=False, 
-        auto_now_add=True
+        auto_now_add=False
     )
 
     class Meta:
