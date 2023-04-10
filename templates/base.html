@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{% endblock %} | SEAWAVES Server</title>
-  <link rel="icon" href="{% static 'img/logo.png' %}">
+  <link rel="icon" href="{% static 'img/seawaves_icon.png' %}">
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -52,8 +52,8 @@
     <ul class="navbar-nav">
       <li>
         <!-- Brand Logo -->
-        <a href="#" class="brand-link">
-          <img src="{% static 'img/logo.png' %}" alt="Logo" class="brand-image img-circle elevation-3 my-auto mr-2">
+        <a href="{% url 'dashboard' %}" class="brand-link">
+          <img src="{% static 'img/seawaves_icon.png' %}" alt="Logo" class="brand-image my-auto mr-2">
           <span style="color: #70a8c0 !important;" class="my-auto">SEAWAVES Server</span>
         </a>
       </li>
@@ -98,6 +98,7 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer no-print pb-2">
     <div class="float-left">
+      <a target="_blank" href="{% url 'dashboard' %}" title="SEAWAVeS"><img class="mr-4" src="{% static 'img/seawaves_logo.png' %}" alt="SEAWAVeS" style="height: 70px; border: 1px"></a>
       <a target="_blank" href="http://asu.edu.ph/online/home/" title="Aklan State University (ASU)"><img class="mr-4" src="{% static 'img/logo_asu512.png' %}" alt="ASU" height="70px"></a>
       <a target="_blank" href="https://www.dost.gov.ph/" title="Department of Science and Technology (DOST)"><img class="mr-4" src="{% static 'img/logo_dost.png' %}" alt="DOST" height="70px"></a>
       <a target="_blank" href="http://pcieerd.dost.gov.ph/" title="Department of Science and Technology – Philippine Council for Industry, Energy, and Emerging Technology Research and Development (DOST-PCIEERD)"><img class="mr-4" src="{% static 'img/logo_dost_pcieerd.png' %}" alt="DOST-PCIEERD" height="70px"></a><br>
