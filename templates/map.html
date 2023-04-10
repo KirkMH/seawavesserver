@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Monitoring{% endblock title %}
+
+
+{% block css %}
+<style>
+  #map, #legend {
+    height: 500px;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
+  }
+  hr {
+    margin-top: 3px;
+    margin-bottom: 6px;
+  }
+  h3 {
+    margin-bottom: 6px;
+  }
+</style>
+{% endblock css %}  
+
+{% block wrapper %}
+
+{% endblock wrapper %}
+  
+{% block page_title %}Monitoring{% endblock page_title %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+    <li class="breadcrumb-item active">Monitoring</li>
+{% endblock breadcrumb %}
+    
+
+{% block main_content %}   
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Map row -->
+        <div class="row">
+          <!-- Left col -->
+          <section class="col-lg-10 col-md-6 col-sm-12 connectedSortable">
+            <!-- Map -->
+            <div class="card">
+              <div class="card-header border-0">
+                <h3 class="card-title">
+                  <i class="fas fa-map-marked mr-1"></i>
+                  Map
+                </h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body table-responsive">
+                <div id="map"></div>
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+            
+          </section>
+          <!-- /.Left col -->
+          
+          <!-- right col -->
+          <section class="col-lg-2 col-md-6 col-sm-12 connectedSortable">
+            
+            <!-- Legend -->
+            <div class="card">
+              <div class="card-header border-0">
+                <h3 class="card-title">
+                  <i class="fas fa-info-circle mr-1"></i>
+                  Legend
+                </h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body table-responsive">
+                <div id="legend" class="text-center">
+                  <h3>{{ boat_count }}</h3>
+                  <p>Boat{{ boat_count|pluralize }} Registered</p>
+                  <hr />
+                  <h3>{{ y_count }}</h3>
+                  <p>Boat{{ y_count|pluralize }} in Yellow Alert</p>
+                  <hr />
+                  <h3>{{ o_count }}</h3>
+                  <p>Boat{{ o_count|pluralize }} in Orange Alert</p>
+                  <hr />
+                  <h3>{{ r_count }}</h3>
+                  <p>Boat{{ r_count|pluralize }} in Red Alert</p>
+                  <hr />
+                  <h3>{{ setting.critical_pitch_angle }}°</h3>
+                  <p>Critical Pitch Angle</p>
+                  <hr />
+                  <h3>{{ setting.critical_roll_angle }}°</h3>
+                  <p>Critical Roll Angle</p>
+                  <hr />
+                </div>
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          </section>
+        </div>
+        <!-- /.row (main row) -->
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    
+{% endblock main_content %}
+
+
+{% block js %}
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- bootboxjs -->
+<script src="{% static 'js/bootbox.all.min.js' %}"></script>
+
+<!-- Google Maps -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<script>
+  var intervalVar;
+  var map;
+  var markers = new Array()
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 11.967422, lng: 121.9178794},
+      zoom: 14
+    });
+
+    loadMap();
+  }
+   
+  function loadMap() {
+    $.ajax({
+      type: "GET",
+      url: '/api/locations',
+      dataType: 'json', // type of response data
+      success: function (data) {   // success callback function
+        console.log(data);
+        const locations = data;
+        
+        // Create an info window to share between markers.
+        const infoWindow = new google.maps.InfoWindow();
+
+        console.log(map);
+        // The markers
+        resetMarkers()
+        const iconBase = "/static/img/dot_";
+        for (let i = 0; i < locations.length; i++) {
+          const loc = locations[i];
+          const direction = (180 + loc.heading) % 360;
+          const svgMarker = {
+            path: "M137 287 c-29 -44 -38 -104 -31 -192 l7 -85 47 0 48 0 7 84 c7 86 -3 150 -31 194 -18 28 -28 28 -47 -1z m63 -87 c10 -18 9 -19 -15 -8 -19 8 -31 8 -50 0 -24 -11 -25 -10 -15 8 7 13 21 20 40 20 19 0 33 -7 40 -20z",
+            fillColor: loc.color,
+            fillOpacity: 0.8,
+            strokeWeight: 0,
+            rotation: direction,
+            scale: .15,
+            anchor: new google.maps.Point(7, 0),
+          };
+          const marker = new google.maps.Marker({
+            position: {lat: loc.latitude, lng: loc.longitude},
+            title: "<b>" + loc.name + "</b><br>Heading: " + loc.heading + "<br>Pitch: " + loc.pitch + "<br>Roll: " + loc.roll,
+            label: loc.name,
+            icon: svgMarker,
+            map: map,
+          });
+          locations[i].marker = marker;
+          
+          // Add a click listener for each marker, and set up the info window.
+          marker.addListener("click", () => {
+            infoWindow.close();
+            infoWindow.setContent(marker.getTitle());
+            infoWindow.open(marker.getMap(), marker);
+            infoWindow.addListener('closeclick', ()=>{
+              startTimer();
+              infoWindow.close();
+            });
+            clearInterval(intervalVar);
+          });
+
+          markers.push(marker);
+        }
+      },
+      error: function (errorMessage) { // error callback 
+          console.log('Error: ' + errorMessage);
+      }
+    });
+  }
+
+  function resetMarkers() {
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers = [];
+  }
+
+  function startTimer() {
+    const reloadInterval = 1000; // 1 second. previously: parseInt("{{setting.post_rate}}");
+    console.log(reloadInterval);
+      
+    intervalVar = setInterval(loadMap, reloadInterval);
+  }
+
+  $(document).ready(function() {
+      $("#menu_monitoring").addClass("active");
+
+      startTimer();
+  })
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly"></script>
+
+{% endblock js %}
+  

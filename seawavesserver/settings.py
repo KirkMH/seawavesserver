@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_seawavesserver',
         'USER': 'root',
-        'PASSWORD': 'admin',
+        'PASSWORD': 'p@$$w0rD',
         'HOST': 'localhost'
     }
 }

@@ -57,6 +57,13 @@ class Boat(models.Model):
         last_record = self.record_set.last()
         return '%d, %d' % (last_record.latitude, last_record.longitude)
     
+    def get_color(self):
+        rec = Record.objects.filter(boat=self).last()
+        if rec:
+            return rec.getColor()
+        else:
+            return 'blue'
+    
 
 class Record(models.Model):
     boat = models.ForeignKey(

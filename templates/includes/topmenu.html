@@ -2,19 +2,19 @@
             <a href="{% url 'dashboard' %}" class="nav-link" id="menu_dashboard">Dashboard</a>
         </li>
         <li class="nav-item my-auto">
-            <a href="{% url 'boat_list' %}" class="nav-link" id="menu_boats">Boats</a>
+            <a href="{% url 'map' %}" class="nav-link" id="menu_monitoring">Monitoring</a>
         </li> 
-        <li class="nav-item my-auto">
-            <a href="{% url 'track_boat' %}" class="nav-link" id="menu_route">Route History</a>
-        </li> 
-        <li class="nav-item my-auto">
-            <a href="{% url 'instructions_page' %}" class="nav-link" id="menu_instructions">API Instructions</a>
-        </li>
-        <!-- <li class="nav-item dropdown my-auto" id="menu_rec">
+        <li class="nav-item dropdown my-auto" id="menu_rec">
             <a id="dropdownRecords" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Records</a>
             <ul aria-labelledby="dropdownRecords" class="dropdown-menu border-0 shadow">
                 <li id="menu1">
                     <a class="dropdown-item" href="{% url 'boat_list' %}">Boats</a>
                 </li>
+                <li id="menu2">
+                    <a class="dropdown-item" href="{% url 'track_boat' %}">Route History</a>
+                </li>
             </ul>
-        </li> -->
+        </li>
+        <li class="nav-item my-auto">
+            <a href="{% url 'instructions_page' %}" class="nav-link" id="menu_instructions">API Instructions</a>
+        </li>

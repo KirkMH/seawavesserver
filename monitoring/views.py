@@ -52,3 +52,29 @@ class RecordDTListView(ServerSideDatatableView):
 
 def instructions_view(request):
     return render(request, 'monitoring/api_instructions.html')
+
+
+def map_view(request):
+    boats = Boat.objects.filter(is_active=True)
+    boat_count = 0
+    y_count = 0
+    o_count = 0
+    r_count = 0
+    for b in boats:
+        boat_count += 1
+        c = b.get_color()
+        if c == 'yellow':
+            y_count += 1
+        elif c == 'orange':
+            o_count += 1
+        elif c == 'red':
+            r_count += 1
+
+    context = {
+        'setting': Setting.objects.last(),
+        'boat_count': boat_count,
+        'y_count': y_count, 
+        'o_count': o_count, 
+        'r_count': r_count
+    } 
+    return render(request, 'map.html', context)
