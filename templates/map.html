@@ -3,6 +3,8 @@
 
 {% block title %}Monitoring{% endblock title %}
 
+<!-- Toastr -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
 {% block css %}
 <style>
@@ -50,15 +52,6 @@
                   <i class="fas fa-map-marked mr-1"></i>
                   Map
                 </h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
               </div>
               <div class="card-body table-responsive">
                 <div id="map"></div>
@@ -81,14 +74,6 @@
                   Legend
                 </h3>
 
-                <div class="card-tools">
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
               </div>
               <div class="card-body table-responsive">
                 <div id="legend" class="text-center">
@@ -135,7 +120,43 @@
 <!-- Google Maps -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
+<!-- Toastr -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script>
+
+toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-bottom-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
+
+var details = [];
+function showToast(index) {
+  const detail = details[index];
+  const str = "<span style='font-size: 14pt;'>" +
+                "Heading Angle: " + detail.heading +
+                "<br/>Pitch Angle: " + detail.pitch +
+                "<br/>Roll Angle: " + detail.roll +
+                "<br/>Latitude: " + detail.lat +
+                "<br/>Longitude: " + detail.lng +
+                "<br/>Owner: " + detail.owner +
+                "<br/>Contact: " + detail.contact +
+                "<br /></span>";
+  toastr["info"](str, "<span style='font-size: 14pt;'>Boat Info</span>");
+}
+
   var intervalVar;
   var map;
   var markers = new Array()
@@ -176,9 +197,26 @@
             scale: .15,
             anchor: new google.maps.Point(7, 0),
           };
+          const detail = {
+              name: loc.name,
+              owner: loc.owner,
+              contact: loc.ownerContact,
+              size: loc.size,
+              heading: loc.heading,
+              pitch: loc.pitch,
+              roll: loc.roll,
+              lat: loc.latitude,
+              lng: loc.longitude
+            };
+          details.push(detail);
           const marker = new google.maps.Marker({
             position: {lat: loc.latitude, lng: loc.longitude},
-            title: "<b>" + loc.name + "</b><br>Heading: " + loc.heading + "<br>Pitch: " + loc.pitch + "<br>Roll: " + loc.roll,
+            title: loc.name,
+            info:   "<b>" + loc.name + 
+                    "</b><br>Heading: " + loc.heading + 
+                    "<br>Pitch: " + loc.pitch + 
+                    "<br>Roll: " + loc.roll + 
+                    "<br><a href='#' onclick='showToast(" + i + ");'>More info...</a>",
             label: loc.name,
             icon: svgMarker,
             map: map,
@@ -188,7 +226,7 @@
           // Add a click listener for each marker, and set up the info window.
           marker.addListener("click", () => {
             infoWindow.close();
-            infoWindow.setContent(marker.getTitle());
+            infoWindow.setContent(marker.info);
             infoWindow.open(marker.getMap(), marker);
             infoWindow.addListener('closeclick', ()=>{
               startTimer();
@@ -230,4 +268,3 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly"></script>
 
 {% endblock js %}
-  

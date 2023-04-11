@@ -35,12 +35,28 @@ class SettingSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BoatLocationSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField('getName')
+    owner = serializers.SerializerMethodField('getOwner')
+    ownerContact = serializers.SerializerMethodField('getOwnerContact')
+    size = serializers.SerializerMethodField('getSize')
     latitude = serializers.SerializerMethodField('getLatitude')
     longitude = serializers.SerializerMethodField('getLongitude')
     color = serializers.SerializerMethodField('getColor')
     heading = serializers.SerializerMethodField('getHeading')
     pitch = serializers.SerializerMethodField('getPitch')
     roll = serializers.SerializerMethodField('getRoll')
+
+    def getName(self, boat):
+        return boat.name
+    
+    def getOwner(self, boat):
+        return boat.owner
+    
+    def getOwnerContact(self, boat):
+        return boat.owner_contact
+    
+    def getSize(self, boat):
+        return f'{boat.length}m x {boat.width}m x {boat.height}m'
 
     def getLatitude(self, boat):
         rec = Record.objects.filter(boat=boat).first()
@@ -68,4 +84,4 @@ class BoatLocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Boat
-        fields = ('id', 'name', 'latitude', 'longitude', 'color', 'heading', 'pitch', 'roll')
+        fields = '__all__' #('id', 'name', 'latitude', 'longitude', 'color', 'heading', 'pitch', 'roll')
