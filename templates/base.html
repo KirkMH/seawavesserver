@@ -47,28 +47,28 @@
     
 
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light elevation-2 fixed-top">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li>
-        <!-- Brand Logo -->
-        <a href="{% url 'dashboard' %}" class="brand-link">
-          <img src="{% static 'img/seawaves_icon.png' %}" alt="Logo" class="brand-image my-auto mr-2">
-          <span style="color: #70a8c0 !important;" class="my-auto">SEAWAVES Server</span>
-        </a>
-      </li>
-    </ul>
+  <nav class="main-header navbar navbar-expand-lg navbar-light navbar-white elevation-2 fixed-top primary">
+    <!-- Brand Logo -->
+    <a href="{% url 'dashboard' %}" class="brand-link">
+      <img src="{% static 'img/seawaves_logo_fit.png' %}" alt="Logo" class="brand-image my-auto">
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-      <!-- top navigation menu -->
-      {% include 'includes/topmenu.html' %}
-      <!-- full screen -->
-      <li class="nav-item"> 
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button"> <i class="fas fa-expand-arrows-alt"></i> </a> 
-      </li>
-    </ul> 
-  </nav>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <!-- top navigation menu -->
+        {% include 'includes/topmenu.html' %}
+        <!-- full screen -->
+        <li class="nav-item"> 
+          <a class="nav-link" data-widget="fullscreen" href="#" role="button"> <i class="fas fa-expand-arrows-alt"></i> </a> 
+        </li>
+      </ul> 
+    </nav>
+  </div>
   <!-- /.navbar -->
   
   <!-- Content Wrapper. Contains page content -->
