@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics
-from monitoring.models import Boat, Record, Setting
+from monitoring.models import Boat, Record, Setting, Voyage
 from .serializers import *
 from datetime import datetime
 
@@ -38,6 +38,17 @@ def getSettings(request):
     '''
     settings = Setting.objects.last()
     serializer = SettingSerializer(settings, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getBoatDetail(request):
+    '''
+    Returns the details of the boat.
+    '''
+    boatId = request.query_params.get('boatId')
+    # retrieve boat's name, owner, and owner's contact and send it as well
+    boat = Boat.objects.get(pk=boatId)
+    serializer = BoatSerializer(boat, many=False)
     return Response(serializer.data)
     
 @api_view(['GET'])
@@ -94,3 +105,40 @@ def getBoatRoute(request):
     
     serializer = RecordSerializer(records, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def startVoyage(request):
+    '''
+    Starts a voyage by creating a new record in the database and returns its primary key.
+    '''
+    boatId = request.query_params.get('boatId')
+    boat = Boat.objects.get(pk=boatId)
+    voyage = Voyage.objects.create(
+        boat=boat,
+    )
+    return Response(voyage.pk)
+
+
+@api_view(['GET'])
+def stopVoyage(request):
+    '''
+    Ends the voyage by updating the voyage's ended_at field.
+    '''
+    voyagePk = request.query_params.get('voyagePk')
+    voyage = Voyage.objects.get(pk=voyagePk)
+    voyage.ended_at = datetime.now()
+    voyage.save()
+    return Response(voyage.pk)
+
+
+@api_view(['POST'])
+def saveBoatLocalData(request):
+    '''
+    Saves the boat's local data (readings and errors) into the server database.
+    '''
+    serializer = AddLocalSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    response = serializer.data
+    return Response(response)

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Max
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
@@ -63,6 +64,44 @@ class Boat(models.Model):
             return rec.getColor()
         else:
             return 'blue'
+        
+
+class VoyageSummary:
+    avg_speed:float = 0
+    max_speed:float = 0
+    max_roll: float = 0
+    max_pitch: float = 0
+
+    def __init__(self, max_roll, max_pitch, avg_speed = 0, max_speed = 0):
+        self.avg_speed = avg_speed
+        self.max_speed = max_speed
+        self.max_roll = max_roll
+        self.max_pitch = max_pitch
+
+
+class Voyage(models.Model):
+    boat = models.ForeignKey(
+        Boat, 
+        verbose_name=_("Boat"), 
+        on_delete=models.CASCADE
+    )
+    started_at = models.DateTimeField(
+        _("Started At"), 
+        auto_now=False, 
+        auto_now_add=True
+    )
+    ended_at = models.DateTimeField(
+        _("Ended At"), 
+        auto_now=False, 
+        auto_now_add=False,
+        null=True, blank=True, default=None
+    )
+
+    def get_summary(self):
+        records = Record.objects.filter(voyage=self)
+        max_roll = records.aggregate(maxRoll=Max('roll_angle'))['maxRoll']
+        max_pitch = records.aggregate(maxPitch=Max('pitch_angle'))['maxPitch']
+        return VoyageSummary(max_roll, max_pitch)
     
 
 class Record(models.Model):
@@ -70,6 +109,12 @@ class Record(models.Model):
         Boat, 
         verbose_name=_("Boat"), 
         on_delete=models.CASCADE
+    )
+    voyage = models.ForeignKey(
+        Voyage, 
+        verbose_name=_("Voyage"), 
+        on_delete=models.CASCADE,
+        null=True, blank=True, default=None
     )
     heading_angle = models.FloatField(
         _("Heading Angle"),
@@ -132,6 +177,7 @@ class Record(models.Model):
         help_text='(in meters)',
         default=0
     )
+    signalStrength = models.PositiveSmallIntegerField()    
     timestamp = models.DateTimeField(
         _("Time Received"), 
         auto_now=False, 
@@ -163,6 +209,18 @@ class Record(models.Model):
             elif pitch_angle >= (c_pitch * 0.8) or roll_angle >= (c_roll * 0.8):
                 color = "yellow"
         return color
+    
+
+class LocalReadingAndError(models.Model):
+    boat = models.ForeignKey(
+        Boat, 
+        verbose_name=_("Boat"), 
+        on_delete=models.CASCADE
+    )
+    readings = models.TextField()
+    errors = models.TextField(null=True, blank=True, default=None)
+    recorded_on = models.DateField(auto_now=False, auto_now_add=True)
+    
 
 
 class Setting(models.Model):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from monitoring.models import Boat, Record, Setting
+from monitoring.models import Boat, Record, Setting, LocalReadingAndError
 
 class BoatSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,3 +85,10 @@ class BoatLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Boat
         fields = '__all__' #('id', 'name', 'latitude', 'longitude', 'color', 'heading', 'pitch', 'roll')
+
+
+
+class AddLocalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LocalReadingAndError
+        fields = '__all__'
