@@ -65,6 +65,7 @@
         $(document).ready(function() {
             $('#dtRecord').DataTable({
                 serverSide: true,
+                "pageLength": 500,
                 sAjaxSource: "{% url 'record_dtlist' boat.pk %}", 
                 columns: [
                     {name: "pk", data: 0, className: 'text-center'},
