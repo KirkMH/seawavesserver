@@ -91,8 +91,14 @@ class Voyage(models.Model):
 
     def calculate_fields(self):
         records = Record.objects.filter(voyage=self)
-        self.max_roll = records.aggregate(max=Max('roll_angle'))['max']
-        self.max_pitch = records.aggregate(max=Max('pitch_angle'))['max']
+        roll = 0
+        pitch = 0
+        for r in records:
+            if abs(r.roll_angle) > roll: roll = r.roll_angle
+            if abs(r.pitch_angle) > pitch: pitch = r.pitch_angle
+
+        self.max_roll = roll
+        self.max_pitch = pitch
         self.max_speed = records.aggregate(max=Max('speed'))['max']
         self.avg_speed = records.aggregate(avg=Avg('speed'))['avg']
         self.save()
