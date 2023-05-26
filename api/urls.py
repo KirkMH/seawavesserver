@@ -13,4 +13,5 @@ urlpatterns = [
     path('boat/route', views.getBoatRoute),
     path('voyage/start', views.startVoyage),
     path('voyage/stop', views.stopVoyage),
+    path('voyage/summary', views.summarizeVoyage),
 ]

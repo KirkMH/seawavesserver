@@ -20,7 +20,7 @@ class BoatAdmin(admin.ModelAdmin):
 admin.site.register(Boat, BoatAdmin)
 
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ('boat', 'heading_angle', 'pitch_angle', 'roll_angle', 'latitude', 'longitude', 'altitude', 'timestamp')
+    list_display = ('boat', 'voyage', 'heading_angle', 'pitch_angle', 'roll_angle', 'latitude', 'longitude', 'altitude', 'signalStrength', 'timestamp')
 admin.site.register(Record, RecordAdmin)
 
 class SettingAdmin(admin.ModelAdmin):
@@ -30,5 +30,13 @@ admin.site.register(Setting, SettingAdmin)
 class BulletinAdmin(admin.ModelAdmin):
     list_display = ('title', 'message', 'available_until', 'created_at', 'created_by')
 admin.site.register(Bulletin, BulletinAdmin)
+
+class VoyageAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'boat', 'started_at', 'ended_at', 'max_roll', 'max_pitch', 'max_speed', 'avg_speed')
+admin.site.register(Voyage, VoyageAdmin)
+
+class LocalReadingAndErrorAdmin(admin.ModelAdmin):
+    list_display = ('boat', 'readings', 'errors', 'recorded_on')
+admin.site.register(LocalReadingAndError, LocalReadingAndErrorAdmin)
 
 admin.site.unregister(Group)

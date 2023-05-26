@@ -1,0 +1,98 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block extra_header %}
+{% include '../includes/datatable.html' %}    
+{% endblock extra_header %}
+
+{% block title %}Boat Voyages{% endblock title %}
+    
+{% block page_title %}Voyages of {{ boat.name }}{% endblock page_title %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'boat_list' %}">Boats</a></li>
+    <li class="breadcrumb-item active">Voyages</li>
+{% endblock breadcrumb %}
+
+{% block main_content %}
+<div class="card m-4">
+    <form method="get">
+        <div class="card-header">
+            <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            </div>
+            </div>
+        </div>
+    </form>
+    <div class="card-body table-responsive">
+        <table id="dtRecord" class="table table-hover table-head-fixed table-sm" width="100%">
+            <thead>
+                <tr>
+                    <th class="text-center" width="10%">Action</th>
+                    <th class="text-center" width="25%">Started At</th>
+                    <th class="text-center" width="25%">Ended At</th>
+                    <th class="text-center" width="10%">Max Pitch</th>
+                    <th class="text-center" width="10%">Max Roll</th>
+                    <th class="text-center" width="10%">Max Speed</th>
+                    <th class="text-center" width="10%">Avg Speed</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock main_content %}
+
+
+{% block js %}
+    <script src="{% static 'js/formatter.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#dtRecord').DataTable({
+                serverSide: true,
+                "pageLength": 500,
+                sAjaxSource: "{% url 'voyage_dtlist' boat.pk %}", 
+                columns: [
+                    {   
+                        data: 0,
+                        render: function (data) {
+                            return '<a href="../' + data + '/view" title="View" class="btn btn-sm btn-primary"><i class="far fa-eye"></i></a>';
+                        },
+                        className: 'text-center'
+                    },
+                    {
+                        name: "startedAt", 
+                        data: 1,
+                        render: function (data) {
+                            return formatDate(new Date(data));
+                        }
+                    },
+                    {
+                        name: "endedAt", 
+                        data: 2,
+                        render: function (data) {
+                            return formatDate(new Date(data));
+                        }
+                    },
+                    {name: "maxPitch", data: 4, className: "text-center"},
+                    {name: "maxRoll", data: 3, className: "text-center"},
+                    {name: "maxSpeed", data: 5, className: "text-center"},
+                    {name: "avgSpeed", data: 6, className: "text-center"},
+                ],
+                order: [[1, 'desc']],
+                "dom": "Bfrtip",
+                buttons: [
+                    'copy', 'excel', 'pdf'
+                ]
+            });
+
+            const reloadInterval = parseInt("{{post_interval}}");
+            setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, reloadInterval);
+            $("#menu_boats").addClass("active");
+        })
+    </script>
+{% endblock js %}

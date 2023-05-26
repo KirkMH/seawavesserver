@@ -129,7 +129,19 @@ def stopVoyage(request):
     voyage = Voyage.objects.get(pk=voyagePk)
     voyage.ended_at = datetime.now()
     voyage.save()
+    voyage.calculate_fields()
     return Response(voyage.pk)
+
+
+@api_view(['GET'])
+def summarizeVoyage(request):
+    '''
+    Ends the voyage by updating the voyage's ended_at field.
+    '''
+    voyagePk = request.query_params.get('voyagePk')
+    voyage = Voyage.objects.get(pk=voyagePk)
+    serializer = VoyageSerializer(voyage, many=False)
+    return Response(serializer.data)
 
 
 @api_view(['POST'])

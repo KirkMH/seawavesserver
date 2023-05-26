@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django_serverside_datatable.views import ServerSideDatatableView
-from .models import Bulletin, Setting, Boat, Record
+from .models import Bulletin, Setting, Boat, Record, Voyage
 from datetime import datetime
 
 
@@ -27,11 +27,33 @@ class BoatDTListView(ServerSideDatatableView):
 	columns = ['pk', 'name', 'owner', 'owner_contact', 'length', 'width', 'height', 'registered_at']
     
     
-def record_listview(request, pk):
+def voyage_listview(request, pk):
     request.session['boat_id'] = pk
     setting = Setting.objects.last()
     context = {
         'boat': Boat.objects.get(pk=pk),
+        'post_interval': setting.post_rate
+    }
+    return render(request, 'monitoring/boat_voyage.html', context)
+
+class VoyageDTListView(ServerSideDatatableView):
+	
+    def get(self, request, *args, **kwargs):
+        pk = request.session.get('boat_id', 0)
+        boat = get_object_or_404(Boat, pk=pk)
+        self.queryset = Voyage.objects.filter(boat=boat)
+        self.columns = ['pk', 'started_at', 'ended_at', 'max_roll', 'max_pitch', 
+                        'max_speed', 'avg_speed']
+        return super().get(request, *args, **kwargs)
+    
+    
+def record_listview(request, pk):
+    request.session['voyage_id'] = pk
+    voyage = Voyage.objects.get(pk=pk)
+    setting = Setting.objects.last()
+    context = {
+        'boat': voyage.boat,
+        'voyage': voyage,
         'post_interval': setting.post_rate
     }
     return render(request, 'monitoring/boat_record.html', context)
@@ -39,14 +61,14 @@ def record_listview(request, pk):
 class RecordDTListView(ServerSideDatatableView):
 	
     def get(self, request, *args, **kwargs):
-        pk = request.session.get('boat_id', 0)
-        boat = get_object_or_404(Boat, pk=pk)
-        self.queryset = Record.objects.filter(boat=boat)
+        pk = request.session.get('voyage_id', 0)
+        voyage = get_object_or_404(Voyage, pk=pk)
+        self.queryset = Record.objects.filter(voyage=voyage)
         self.columns = ['pk', 'timestamp', 'latitude', 'longitude', 'altitude', 
                         'heading_angle', 'pitch_angle', 'roll_angle', 
                         'gyro_x', 'gyro_y', 'gyro_z', 
                         'accel_x', 'accel_y', 'accel_z', 
-                        'mag_x', 'mag_y', 'mag_z', 'sent_timestamp']
+                        'mag_x', 'mag_y', 'mag_z', 'signalStrength', 'speed', 'sent_timestamp']
         return super().get(request, *args, **kwargs)
         
 

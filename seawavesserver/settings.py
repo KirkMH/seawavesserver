@@ -79,6 +79,7 @@ WSGI_APPLICATION = 'seawavesserver.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
+    # development
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_seawavesserver',
@@ -86,6 +87,14 @@ DATABASES = {
         'PASSWORD': 'p@$$w0rD',
         'HOST': 'localhost'
     }
+    # production
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'seawavesserver$seawavesserver',
+    #     'USER': 'seawavesserver',
+    #     'PASSWORD': 'SeaCondition01',
+    #     'HOST': 'seawavesserver.mysql.pythonanywhere-services.com'
+    # }
 }
 
 # as per instructions from https://www.codementor.io/@jamesezechukwu/how-to-deploy-django-app-on-heroku-dtsee04d4

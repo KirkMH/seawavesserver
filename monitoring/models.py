@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Max
+from django.db.models import Max, Avg
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
@@ -66,19 +66,6 @@ class Boat(models.Model):
             return 'blue'
         
 
-class VoyageSummary:
-    avg_speed:float = 0
-    max_speed:float = 0
-    max_roll: float = 0
-    max_pitch: float = 0
-
-    def __init__(self, max_roll, max_pitch, avg_speed = 0, max_speed = 0):
-        self.avg_speed = avg_speed
-        self.max_speed = max_speed
-        self.max_roll = max_roll
-        self.max_pitch = max_pitch
-
-
 class Voyage(models.Model):
     boat = models.ForeignKey(
         Boat, 
@@ -96,12 +83,22 @@ class Voyage(models.Model):
         auto_now_add=False,
         null=True, blank=True, default=None
     )
+    max_roll = models.FloatField(_("Maximum Roll"), default=0)
+    max_pitch = models.FloatField(_("Maximum Pitch"), default=0)
+    max_speed = models.FloatField(_("Maximum Speed"), default=0)
+    avg_speed = models.FloatField(_("Average Speed"), default=0)
+    
 
-    def get_summary(self):
+    def calculate_fields(self):
         records = Record.objects.filter(voyage=self)
-        max_roll = records.aggregate(maxRoll=Max('roll_angle'))['maxRoll']
-        max_pitch = records.aggregate(maxPitch=Max('pitch_angle'))['maxPitch']
-        return VoyageSummary(max_roll, max_pitch)
+        self.max_roll = records.aggregate(max=Max('roll_angle'))['max']
+        self.max_pitch = records.aggregate(max=Max('pitch_angle'))['max']
+        self.max_speed = records.aggregate(max=Max('speed'))['max']
+        self.avg_speed = records.aggregate(avg=Avg('speed'))['avg']
+        self.save()
+
+    def __str__(self):
+        return f'{self.boat.name} ({self.started_at.strftime("%m/%d/%y %H:%M:%S")} - {self.ended_at.strftime("%m/%d/%y %H:%M:%S")})'
     
 
 class Record(models.Model):
@@ -177,7 +174,12 @@ class Record(models.Model):
         help_text='(in meters)',
         default=0
     )
-    signalStrength = models.PositiveSmallIntegerField()    
+    signalStrength = models.PositiveSmallIntegerField()
+    speed = models.FloatField(
+        _("Speed"),
+        help_text='(in m/s)',
+        default=0
+    )
     timestamp = models.DateTimeField(
         _("Time Received"), 
         auto_now=False, 
