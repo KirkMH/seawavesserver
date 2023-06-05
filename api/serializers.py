@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from monitoring.models import *
 
+from datetime import datetime
+
 class BoatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Boat
@@ -60,11 +62,13 @@ class BoatLocationSerializer(serializers.ModelSerializer):
 
     def getLatitude(self, boat):
         rec = Record.objects.filter(boat=boat).first()
-        return rec.latitude if rec != None else None
+        today = datetime.now()
+        return rec.latitude if rec and today.date() == rec.timestamp.date() else None
 
     def getLongitude(self, boat):
         rec = Record.objects.filter(boat=boat).first()
-        return rec.longitude if rec != None else None
+        today = datetime.now()
+        return rec.longitude if rec and today.date() == rec.timestamp.date() else None
 
     def getColor(self, boat):
         rec = Record.objects.filter(boat=boat).first()

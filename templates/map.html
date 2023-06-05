@@ -286,13 +286,12 @@ function showToast(index) {
   }
 
   $(document).ready(function() {
-    let vpk = parseInt("{{ voyage_pk }}");
-    console.log('vpk = ' + vpk);
-    if (vpk > 0) {
+    console.log('bpk = ' + bpk);
+    if (bpk > 0) {
       $('#dtRecord').DataTable({
           serverSide: true,
           "pageLength": 500,
-          sAjaxSource: "{% url 'record_dtlist' voyage_pk %}", 
+          sAjaxSource: "{% url 'focus_record_dtlist' %}", 
           columns: [
               {name: "pk", data: 0, className: 'text-center'},
               {
@@ -312,7 +311,7 @@ function showToast(index) {
           ]
       });
 
-      const reloadInterval = parseInt("{{setting.post_rate}}");
+      const reloadInterval = 1000;
       setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, reloadInterval);
     }
       

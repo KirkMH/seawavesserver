@@ -62,13 +62,26 @@ class RecordDTListView(ServerSideDatatableView):
 	
     def get(self, request, *args, **kwargs):
         pk = request.session.get('voyage_id', 0)
-        if pk == 0:
-            # assume that this comes from the map
-            fboat = FocusBoat.objects.last()
-            if fboat:
-                boat_voyage = Voyage.objects.filter(boat=fboat.boat).last()
-                if boat_voyage:
-                    pk = boat_voyage.pk
+        voyage = get_object_or_404(Voyage, pk=pk)
+        self.queryset = Record.objects.filter(voyage=voyage)
+        print(f'voyage pk: {pk}')
+        print(self.queryset)
+        self.columns = ['pk', 'timestamp', 'latitude', 'longitude', 'altitude', 
+                        'heading_angle', 'pitch_angle', 'roll_angle', 
+                        'gyro_x', 'gyro_y', 'gyro_z', 
+                        'accel_x', 'accel_y', 'accel_z', 
+                        'mag_x', 'mag_y', 'mag_z', 'signalStrength', 'speed', 'sent_timestamp']
+        return super().get(request, *args, **kwargs)
+
+class FocusRecordDTListView(ServerSideDatatableView):
+	
+    def get(self, request, *args, **kwargs):
+        pk = 0
+        fboat = FocusBoat.objects.last()
+        if fboat:
+            boat_voyage = Voyage.objects.filter(boat=fboat.boat).last()
+            if boat_voyage:
+                pk = boat_voyage.pk
         voyage = get_object_or_404(Voyage, pk=pk)
         self.queryset = Record.objects.filter(voyage=voyage)
         print(f'voyage pk: {pk}')
