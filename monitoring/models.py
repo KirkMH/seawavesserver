@@ -103,8 +103,12 @@ class Voyage(models.Model):
         self.avg_speed = records.aggregate(avg=Avg('speed'))['avg']
         self.save()
 
+    def get_ended_at(self):
+        return self.ended_at if self.ended_at else ''
+
     def __str__(self):
-        return f'{self.boat.name} ({self.started_at.strftime("%m/%d/%y %H:%M:%S")} - {self.ended_at.strftime("%m/%d/%y %H:%M:%S")})'
+        ended = self.ended_at.strftime("%m/%d/%y %H:%M:%S") if self.ended_at else 'ongoing'
+        return f'{self.boat.name} ({self.started_at.strftime("%m/%d/%y %H:%M:%S")} - {ended})'
     
 
 class Record(models.Model):
@@ -302,3 +306,12 @@ class Bulletin(models.Model):
     def __str__(self):
         return self.title
     
+
+class FocusBoat(models.Model):
+    boat = models.ForeignKey(Boat, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['-pk']
+    
+    def __str__(self) -> str:
+        return self.boat.name

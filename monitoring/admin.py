@@ -36,7 +36,11 @@ class VoyageAdmin(admin.ModelAdmin):
 admin.site.register(Voyage, VoyageAdmin)
 
 class LocalReadingAndErrorAdmin(admin.ModelAdmin):
-    list_display = ('boat', 'readings', 'errors', 'recorded_on')
+    list_display = ('pk', 'boat', 'recorded_on')
 admin.site.register(LocalReadingAndError, LocalReadingAndErrorAdmin)
+
+class FocusBoatAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'boat', )
+admin.site.register(FocusBoat, FocusBoatAdmin)
 
 admin.site.unregister(Group)

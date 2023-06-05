@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_header %}
+{% include 'includes/datatable.html' %}    
+{% endblock extra_header %}
+
 {% block title %}Monitoring{% endblock title %}
 
 <!-- Toastr -->
@@ -8,8 +12,8 @@
 
 {% block css %}
 <style>
-  #map, #legend {
-    height: 500px;
+  #map, #legend, #focus_row {
+    height: 700px;
     /* The height is 400 pixels */
     width: 100%;
     /* The width is the width of the web page */
@@ -71,7 +75,7 @@
               <div class="card-header border-0">
                 <h3 class="card-title">
                   <i class="fas fa-info-circle mr-1"></i>
-                  Legend
+                  Information
                 </h3>
 
               </div>
@@ -80,6 +84,7 @@
                   <h3>{{ boat_count }}</h3>
                   <p>Boat{{ boat_count|pluralize }} Registered</p>
                   <hr />
+<!--                   
                   <h3>{{ y_count }}</h3>
                   <p>Boat{{ y_count|pluralize }} in Yellow Alert</p>
                   <hr />
@@ -88,7 +93,7 @@
                   <hr />
                   <h3>{{ r_count }}</h3>
                   <p>Boat{{ r_count|pluralize }} in Red Alert</p>
-                  <hr />
+                  <hr /> -->
                   <h3>{{ setting.critical_pitch_angle }}°</h3>
                   <p>Critical Pitch Angle</p>
                   <hr />
@@ -103,6 +108,26 @@
           </section>
         </div>
         <!-- /.row (main row) -->
+        {% if focus %}
+        <div id="focus_row" class="row">  
+          <div class="col-12 card">
+            <h2 class="text-center" style="padding-top: 30px;">{{ focus.boat.name }}</h2>
+            <div class="table-responsive">
+              <table id="dtRecord" class="table table-hover table-head-fixed table-sm">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Time Received</th>
+                        <th class="text-center">Pitch Angle</th>
+                        <th class="text-center">Roll Angle</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        {% endif %}
 
       </div><!-- /.container-fluid -->
     </section>
@@ -122,6 +147,8 @@
 
 <!-- Toastr -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+<script src="{% static 'js/formatter.js' %}"></script>
 <script>
 
 toastr.options = {
@@ -259,9 +286,39 @@ function showToast(index) {
   }
 
   $(document).ready(function() {
-      $("#menu_monitoring").addClass("active");
+    let vpk = parseInt("{{ voyage_pk }}");
+    console.log('vpk = ' + vpk);
+    if (vpk > 0) {
+      $('#dtRecord').DataTable({
+          serverSide: true,
+          "pageLength": 500,
+          sAjaxSource: "{% url 'record_dtlist' voyage_pk %}", 
+          columns: [
+              {name: "pk", data: 0, className: 'text-center'},
+              {
+                  name: "timestamp", 
+                  data: 1,
+                  render: function (data) {
+                      return formatDate(new Date(data));
+                  }
+              },
+              {name: "pitch", data: 6, className: 'text-right'},
+              {name: "roll", data: 7, className: 'text-right'},
+          ],
+          order: [[0, 'desc']],
+          "dom": "Bfrtip",
+          buttons: [
+              'copy', 'excel', 'pdf'
+          ]
+      });
 
-      startTimer();
+      const reloadInterval = parseInt("{{setting.post_rate}}");
+      setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, reloadInterval);
+    }
+      
+    $("#menu_monitoring").addClass("active");
+
+    startTimer();
   })
 </script>
 

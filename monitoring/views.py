@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django_serverside_datatable.views import ServerSideDatatableView
-from .models import Bulletin, Setting, Boat, Record, Voyage
+from .models import Bulletin, Setting, Boat, Record, Voyage, FocusBoat
 from datetime import datetime
 
 
@@ -62,8 +62,17 @@ class RecordDTListView(ServerSideDatatableView):
 	
     def get(self, request, *args, **kwargs):
         pk = request.session.get('voyage_id', 0)
+        if pk == 0:
+            # assume that this comes from the map
+            fboat = FocusBoat.objects.last()
+            if fboat:
+                boat_voyage = Voyage.objects.filter(boat=fboat.boat).last()
+                if boat_voyage:
+                    pk = boat_voyage.pk
         voyage = get_object_or_404(Voyage, pk=pk)
         self.queryset = Record.objects.filter(voyage=voyage)
+        print(f'voyage pk: {pk}')
+        print(self.queryset)
         self.columns = ['pk', 'timestamp', 'latitude', 'longitude', 'altitude', 
                         'heading_angle', 'pitch_angle', 'roll_angle', 
                         'gyro_x', 'gyro_y', 'gyro_z', 
@@ -77,6 +86,12 @@ def instructions_view(request):
 
 
 def map_view(request):
+    fboat = FocusBoat.objects.last()
+    voyage_pk = 0
+    if fboat:
+        voyage = Voyage.objects.filter(boat=fboat.boat).last()
+        if voyage:
+            voyage_pk = voyage.pk
     boats = Boat.objects.filter(is_active=True)
     boat_count = 0
     y_count = 0
@@ -97,6 +112,8 @@ def map_view(request):
         'boat_count': boat_count,
         'y_count': y_count, 
         'o_count': o_count, 
-        'r_count': r_count
+        'r_count': r_count,
+        'focus': fboat,
+        'voyage_pk': voyage_pk
     } 
     return render(request, 'map.html', context)
