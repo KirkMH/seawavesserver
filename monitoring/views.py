@@ -84,8 +84,6 @@ class FocusRecordDTListView(ServerSideDatatableView):
                 pk = boat_voyage.pk
         voyage = get_object_or_404(Voyage, pk=pk)
         self.queryset = Record.objects.filter(voyage=voyage)
-        print(f'voyage pk: {pk}')
-        print(self.queryset)
         self.columns = ['pk', 'timestamp', 'latitude', 'longitude', 'altitude', 
                         'heading_angle', 'pitch_angle', 'roll_angle', 
                         'gyro_x', 'gyro_y', 'gyro_z', 

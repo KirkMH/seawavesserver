@@ -111,19 +111,26 @@
         {% if focus %}
         <div id="focus_row" class="row">  
           <div class="col-12 card">
-            <h2 class="text-center" style="padding-top: 30px;">{{ focus.boat.name }}</h2>
-            <div class="table-responsive">
-              <table id="dtRecord" class="table table-hover table-head-fixed table-sm">
-                <thead>
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th class="text-center">Time Received</th>
-                        <th class="text-center">Pitch Angle</th>
-                        <th class="text-center">Roll Angle</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
+            <h2 class="card-header text-center" style="padding-top: 30px;">{{ focus.boat.name }}</h2>
+            <div class="row">
+              <div class="card-body col-6 table-responsive">
+                <table id="dtRecord" class="table table-hover table-head-fixed table-sm">
+                  <thead>
+                      <tr>
+                          <th class="text-center">#</th>
+                          <th class="text-center">Time Received</th>
+                          <th class="text-center">Pitch Angle</th>
+                          <th class="text-center">Roll Angle</th>
+                      </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="card-body col-6">
+                <div class="chart">
+                  <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -139,6 +146,10 @@
 {% block js %}
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+<!-- ChartJS -->
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+
 <!-- bootboxjs -->
 <script src="{% static 'js/bootbox.all.min.js' %}"></script>
 
@@ -184,6 +195,62 @@ function showToast(index) {
   toastr["info"](str, "<span style='font-size: 14pt;'>Boat Info</span>");
 }
 
+// $(document).ready(function() {
+    
+  //-------------
+  //- LINE CHART -
+  //--------------
+  var areaChartData = {
+    // labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels  : [1, 2, 3, 4, 5],
+    datasets: [
+      {
+        label               : 'Pitch',
+        backgroundColor     : 'rgba(60,141,188,0.9)',
+        borderColor         : 'rgba(60,141,188,0.8)',
+        pointRadius          : false,
+        pointColor          : '#3b8bba',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : [1, 2, -3, 4, 5]
+      },
+      {
+        label               : 'Roll',
+        backgroundColor     : 'rgba(210, 214, 222, 1)',
+        borderColor         : 'rgba(210, 214, 222, 1)',
+        pointRadius         : false,
+        pointColor          : 'rgba(210, 214, 222, 1)',
+        pointStrokeColor    : '#c1c7d1',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data                : [5, 4, 3, 1, -2]
+      },
+    ]
+  }
+
+  var areaChartOptions = {
+    animation: false,
+    maintainAspectRatio : false,
+    responsive : true,
+    legend: {
+      display: true,
+      position: 'bottom',
+    },
+    scales: {
+      xAxes: [{
+        gridLines : {
+          display : false,
+        }
+      }],
+      yAxes: [{
+        gridLines : {
+          display : false,
+        }
+      }]
+    }
+  }
+
   var intervalVar;
   var map;
   var markers = new Array()
@@ -196,24 +263,43 @@ function showToast(index) {
     loadMap();
   }
    
+  let labels = [];
+  let pitch = [];
+  let roll = [];
+  let ctr = 0;
+
   function loadMap() {
+
     $.ajax({
       type: "GET",
       url: '/api/locations',
       dataType: 'json', // type of response data
       success: function (data) {   // success callback function
-        console.log(data);
         const locations = data;
         
         // Create an info window to share between markers.
         const infoWindow = new google.maps.InfoWindow();
 
-        console.log(map);
         // The markers
         resetMarkers()
         const iconBase = "/static/img/dot_";
         for (let i = 0; i < locations.length; i++) {
           const loc = locations[i];
+          if (!(loc.latitude > 0)) continue;
+
+          if (ctr % 30 == 0 || ctr <= 1) {
+            console.log("Location: " +loc);
+            labels.push('');
+            pitch.push(loc.pitch);
+            roll.push(loc.roll);
+            if (labels.length > 100) {
+              labels.shift();
+              pitch.shift();
+              roll.shift();
+            }
+          }
+          ctr++;
+
           const direction = (180 + loc.heading) % 360;
           const svgMarker = {
             path: "M137 287 c-29 -44 -38 -104 -31 -192 l7 -85 47 0 48 0 7 84 c7 86 -3 150 -31 194 -18 28 -28 28 -47 -1z m63 -87 c10 -18 9 -19 -15 -8 -19 8 -31 8 -50 0 -24 -11 -25 -10 -15 8 7 13 21 20 40 20 19 0 33 -7 40 -20z",
@@ -264,6 +350,27 @@ function showToast(index) {
 
           markers.push(marker);
         }
+
+        console.log("labels: " + labels);
+        console.log("pitch: " + pitch);
+        console.log("roll: " + roll);
+        areaChartData.labels = labels;
+        areaChartData.datasets[0].data = pitch;
+        areaChartData.datasets[1].data = roll;
+        
+        var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+        var lineChartOptions = $.extend(true, {}, areaChartOptions)
+        var lineChartData = $.extend(true, {}, areaChartData)
+        lineChartData.datasets[0].fill = false;
+        lineChartData.datasets[1].fill = false;
+        lineChartOptions.datasetFill = false
+
+        var lineChart = new Chart(lineChartCanvas, {
+          type: 'line',
+          data: lineChartData,
+          options: lineChartOptions
+        });
+
       },
       error: function (errorMessage) { // error callback 
           console.log('Error: ' + errorMessage);
@@ -285,40 +392,41 @@ function showToast(index) {
     intervalVar = setInterval(loadMap, reloadInterval);
   }
 
-  $(document).ready(function() {
-    console.log('bpk = ' + bpk);
-    if (bpk > 0) {
-      $('#dtRecord').DataTable({
-          serverSide: true,
-          "pageLength": 500,
-          sAjaxSource: "{% url 'focus_record_dtlist' %}", 
-          columns: [
-              {name: "pk", data: 0, className: 'text-center'},
-              {
-                  name: "timestamp", 
-                  data: 1,
-                  render: function (data) {
-                      return formatDate(new Date(data));
-                  }
-              },
-              {name: "pitch", data: 6, className: 'text-right'},
-              {name: "roll", data: 7, className: 'text-right'},
-          ],
-          order: [[0, 'desc']],
-          "dom": "Bfrtip",
-          buttons: [
-              'copy', 'excel', 'pdf'
-          ]
-      });
+  let fpk = parseInt("{{ focus.pk }}")
+  console.log('fpk = ' + fpk);
+  if (fpk > 0) {
+    $('#dtRecord').DataTable({
+        serverSide: true,
+        "pageLength": 500,
+        sAjaxSource: "{% url 'focus_record_dtlist' %}", 
+        columns: [
+            {name: "pk", data: 0, className: 'text-center'},
+            {
+                name: "timestamp", 
+                data: 1,
+                render: function (data) {
+                    return formatDate(new Date(data));
+                }
+            },
+            {name: "pitch", data: 6, className: 'text-right'},
+            {name: "roll", data: 7, className: 'text-right'},
+        ],
+        order: [[0, 'desc']],
+        "dom": "Bfrtip",
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
 
-      const reloadInterval = 1000;
-      setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, reloadInterval);
-    }
-      
-    $("#menu_monitoring").addClass("active");
+    const reloadInterval = 30000;
+    setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, reloadInterval);
+  }
+    
+  $("#menu_monitoring").addClass("active");
 
-    startTimer();
-  })
+  startTimer();
+
+// });
 </script>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly"></script>
