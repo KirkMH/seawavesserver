@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
 
     'rest_framework',
     'monitoring',
     'reporting',
+    'access',
 ]
 
 MIDDLEWARE = [
@@ -80,21 +82,21 @@ WSGI_APPLICATION = 'seawavesserver.wsgi.application'
 
 DATABASES = {
     # development
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'django_seawavesserver',
-    #     'USER': 'root',
-    #     'PASSWORD': 'p@$$w0rD',
-    #     'HOST': 'localhost'
-    # }
-    # production
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'seawavesserver$seawavesserver',
-        'USER': 'seawavesserver',
-        'PASSWORD': 'SeaCondition01',
-        'HOST': 'seawavesserver.mysql.pythonanywhere-services.com'
+        'NAME': 'django_seawavesserver',
+        'USER': 'root',
+        'PASSWORD': 'p4$$DB',
+        'HOST': 'localhost'
     }
+    # production
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'seawavesserver$seawavesserver',
+    #     'USER': 'seawavesserver',
+    #     'PASSWORD': 'SeaCondition01',
+    #     'HOST': 'seawavesserver.mysql.pythonanywhere-services.com'
+    # }
 }
 
 # as per instructions from https://www.codementor.io/@jamesezechukwu/how-to-deploy-django-app-on-heroku-dtsee04d4
@@ -163,3 +165,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # other settings required by check --deploy
 # SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
+
+# the login route/URL
+LOGIN_URL = 'login'
+# which route to take after logging in
+LOGIN_REDIRECT_URL = 'dashboard'
+# which route to take after logging out
+LOGOUT_REDIRECT_URL = 'login'

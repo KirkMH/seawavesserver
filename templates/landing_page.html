@@ -1,0 +1,297 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SEAWAVES | Sea-condition Emergency Alert and Warning Apparatus for Vessel Safety</title>
+  <link rel="icon" href="{% static 'img/seawaves_icon.png' %}">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+  
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'css/main.css' %}" rel="stylesheet">
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="#" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <h1 class="sitename">SEAWAVeS</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Features</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section dark-background">
+      <div id="hero-carousel" data-bs-interval="5000" class="container carousel carousel-fade" data-bs-ride="carousel">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="carousel-container">
+            <h2 class="animate__animated animate__fadeInDown"><span class="highlight">S</span>ea-condition <span class="highlight">E</span>mergency <span class="highlight">A</span>lert and <span class="highlight">W</span>arning <span class="highlight">A</span>pparatus for <span class="highlight">Ve</span>ssel <span class="highlight">S</span>afety</span></h2>
+            <p class="animate__animated animate__fadeInUp">Sea-condition Emergency Alert and Warning Apparatus for Vessel Safety (SEAWAVES) is a watercraft tracking and monitoring system developed and deployed to monitor watercraft and sea conditions to provide a safer and more resilient marine communication system.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <svg class="hero-waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28 " preserveAspectRatio="none">
+        <defs>
+          <path id="wave-path" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+        </defs>
+        <g class="wave1">
+          <use xlink:href="#wave-path" x="50" y="3"></use>
+        </g>
+        <g class="wave2">
+          <use xlink:href="#wave-path" x="50" y="0"></use>
+        </g>
+        <g class="wave3">
+          <use xlink:href="#wave-path" x="50" y="9"></use>
+        </g>
+      </svg>
+
+    </section><!-- /Hero Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <div class="container">
+
+        <div class="row position-relative">
+
+          <div class="col-lg-7 about-img" data-aos="zoom-out" data-aos-delay="200"><img src="{% static 'img/tech.png' %}"></div>
+
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+            <h2 class="inner-title">Technology Used</h2>
+            <div class="our-story">
+              <p>SEAWAVeS applies contemporary technology using  the Fused Location Provider Application Programming Interface (API) to retrieve the device's current location. To track and monitor a watercraft using Android sensors  of  mobile phones, the work includes calibrating the compass, GPS, and Global System for Mobile Communication (GSM). General packet radio service (GPRS) sends the tracking information to the server.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /About Section -->
+
+    <!-- Services Section -->
+    <section id="services" class="services section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Features</h2>
+        <p>If the watercraft is at a critical level, alert messages are sent to the monitoring system, and to the registered mobile number of the watercraft owner. Also, a warning display and sound are produced by the device.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item position-relative">
+              <div class="icon">
+                <i class="bi bi-compass"></i>
+              </div>
+              <a href="#" class="stretched-link">
+                <h3>Real-time Vessel Monitoring</h3>
+              </a>
+              <p>SEAWAVeS provides continuous tracking of watercraft location, speed, and heading using built-in GPS and sensors, ensuring safety and operational efficiency at sea.</p>
+            </div>
+          </div><!-- End Service Item -->
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item position-relative">
+              <div class="icon">
+                <i class="bi bi-broadcast"></i>
+              </div>
+              <a href="#" class="stretched-link">
+                <h3>Automated Distress Alerts</h3>
+              </a>
+              <p>When the watercraft is in distress, the device automatically sends an alert to the monitoring system and the registered mobile number of the watercraft owner.</p>
+            </div>
+          </div><!-- End Service Item -->
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item position-relative">
+              <div class="icon">
+                <i class="bi bi-speedometer2"></i>
+              </div>
+              <a href="#" class="stretched-link">
+                <h3>User-Friendly Dashboard</h3>
+              </a>
+              <p>An intuitive web and mobile interface allows vessel owners, operators, and authorities to monitor multiple vessels, review trip history, and manage alerts with ease.</p>
+            </div>
+          </div><!-- End Service Item -->
+        </div>
+
+      </div>
+
+    </section><!-- /Services Section -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Contact</h2>
+        <p>We'd love to hear from you! Whether you have questions about SEAWAVeS, need support, or are interested in partnering with us, feel free to reach out. Your feedback helps us improve safety and innovation at sea.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4">
+            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+              <i class="bi bi-geo-alt flex-shrink-0"></i>
+              <div>
+                <h3>Address</h3>
+                <p>Aklan State University - Kalibo Campus, Andagao, Kalibo, Aklan</p>
+              </div>
+            </div><!-- End Info Item -->
+
+            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+              <i class="bi bi-envelope flex-shrink-0"></i>
+              <div>
+                <h3>Email Us</h3>
+                <p>seawaves@asu.edu.ph</p>
+              </div>
+            </div><!-- End Info Item -->
+
+          </div>
+
+          <div class="col-lg-8">
+            <form method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                {% csrf_token %}
+              <div class="row mb-4">
+
+                <div class="col-md-6">
+                  <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+                </div>
+
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-12">
+                  <input type="text" class="form-control" name="address" placeholder="Address" required="">
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                  <input type="text" name="mob_num" class="form-control" placeholder="Mobile Number">
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="text" class="form-control" name="tel_num" placeholder="Telephone Number">
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-12">
+                  <textarea class="form-control" name="issue" rows="6" placeholder="Your Message"></textarea>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-12 text-center">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+
+                  <button type="submit">Send Message</button>
+                </div>
+
+            </div>
+            </form>
+          </div><!-- End Contact Form -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Contact Section -->
+
+  </main>
+
+  <footer id="footer" class="footer light-background">
+    <div class="container">
+      <h5 class="sitename">Sea-condition Emergency Alert and Warning Apparatus for Vessel Safety</h5>
+      <p>SEAWAVeS</p>
+      <div class="container">
+        <div class="copyright">
+          <span>Copyright</span> <strong class="px-1 sitename">Aklan State University</strong> <span>All Rights Reserved</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Messages -->
+  <div style="display: none;">
+    {% if messages %}
+      {% for message in messages %}
+        <input type="hidden" class="message_notif" value="{{ message.tags }}:{{ message }}" />
+      {% endfor %}
+    {% endif %}
+  </div>
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Toastr -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="{% static 'js/toastr-loader.js' %}"></script>
+
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

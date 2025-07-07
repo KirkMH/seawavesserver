@@ -5,17 +5,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Budget Monitoring System | ATI-RTC6</title>
+  <title>Login | SEAWAVeS</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <script src="https://kit.fontawesome.com/94b023f88f.js" crossorigin="anonymous"></script>
   <!-- icheck bootstrap -->
   <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
-  <link rel="icon" href="{% static 'img/logo.png' %}">
+  <link rel="icon" href="{% static 'img/seawaves_icon.png' %}">
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -26,23 +26,17 @@
     <div class="card-header">
       <div class="container">
         <div class="row">
-          <div class="col-sm-4 col-md-4 col-lg-4 text-center text-sm-left">
-            <img src="{% static 'img/logo.png' %}" alt="ATI Logo" width="100px">
-          </div>
-          <div class="col-sm-1 col-md-1 col-lg-1">
-          </div>
-          <div class="col-sm-7 col-md-7 col-lg-7 text-center text-sm-left">
-            <b style="font-size: 24pt;">ATI-RTC6</b><br>
-            <span style="font-size: 14pt;">Budget Monitoring System</span>
+          <div class="col-sm-12">
+            <img src="{% static 'img/seawaves_logo_fit.png' %}" alt="SEAWAVeS Logo" width="100%"><br>
+            <div class="text-center">
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="card-body">
-        
         {% block content %}
         {% endblock content %}
-            
     </div>
     <!-- /.card-body -->
   </div>
