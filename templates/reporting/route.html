@@ -158,6 +158,12 @@
     console.log(loc);
     resetMarker();
 
+
+    const sos = loc.pitch_angle == 100 && loc.roll_angle == 100;
+    const sos_desc = sos ? "SOS! - " : "";
+    const sos_html = sos ? "<b>SOS!</b><br><br>" : "";
+    loc.color = sos ? "purple" : loc.color;
+
     const direction = (180 + loc.heading_angle) % 360;
     const svgMarker = {
       path: "M137 287 c-29 -44 -38 -104 -31 -192 l7 -85 47 0 48 0 7 84 c7 86 -3 150 -31 194 -18 28 -28 28 -47 -1z m63 -87 c10 -18 9 -19 -15 -8 -19 8 -31 8 -50 0 -24 -11 -25 -10 -15 8 7 13 21 20 40 20 19 0 33 -7 40 -20z",
@@ -171,8 +177,8 @@
 
     const newMarker = new google.maps.Marker({
       position: {lat: loc.latitude, lng: loc.longitude},
-      title: "<b>" + loc.timestamp + "</b><br>Heading: " + loc.heading_angle + "<br>Pitch: " + loc.pitch_angle + "<br>Roll: " + loc.roll_angle,
-      label: loc.timestamp,
+      title: sos_html + "<b>" + loc.timestamp + "</b><br>Heading: " + loc.heading_angle + "<br>Pitch: " + loc.pitch_angle + "<br>Roll: " + loc.roll_angle,
+      label: sos_desc + loc.timestamp,
       icon: svgMarker,
       map: map,
     });
@@ -219,4 +225,3 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly"></script>
 
 {% endblock js %}
-  
