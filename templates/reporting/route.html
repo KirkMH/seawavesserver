@@ -20,21 +20,21 @@
     /* The width is the width of the web page */
   }
 </style>
-{% endblock css %}  
+{% endblock css %}
 
 {% block wrapper %}
 
 {% endblock wrapper %}
-  
+
 {% block page_title %}Dashboard{% endblock page_title %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="#">Home</a></li>
     <li class="breadcrumb-item active">Boat Route</li>
 {% endblock breadcrumb %}
-    
 
-{% block main_content %}   
+
+{% block main_content %}
 
     <!-- Main content -->
     <section class="content">
@@ -85,7 +85,7 @@
               <!-- /.card-footer -->
             </div>
             <!-- /.card -->
-            
+
           </section>
           <!-- /.Left col -->
         </div>
@@ -94,7 +94,7 @@
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-    
+
 {% endblock main_content %}
 
 
@@ -130,7 +130,7 @@
     console.log("Boat id: " + boat_id);
     loadMap(boat_id);
   })
-   
+
   function loadMap(boat_id) {
     $.ajax({
       type: "GET",
@@ -143,7 +143,7 @@
         resetMarker();
         startTimer();
       },
-      error: function (errorMessage) { // error callback 
+      error: function (errorMessage) { // error callback
           console.log('Error: ' + errorMessage);
       }
     });
@@ -183,7 +183,7 @@
       map: map,
     });
     marker = newMarker;
-    
+
     // Add a click listener for each marker, and set up the info window.
     marker.addListener("click", () => {
       infoWindow.close();
@@ -205,7 +205,7 @@
   function startTimer() {
     const reloadInterval = 1000; // 1 second. previously: parseInt("{{setting.post_rate}}");
     console.log(reloadInterval);
-      
+
     index = locations.length - 1;
     intervalVar = setInterval(setMarker, reloadInterval);
   }
