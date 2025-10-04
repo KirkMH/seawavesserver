@@ -23,7 +23,7 @@ def boat_listview(request):
     return render(request, 'monitoring/boat_list.html')
 
 class BoatDTListView(ServerSideDatatableView):
-	queryset = Boat.objects.all()
+	queryset = Boat.objects.filter(is_active=True)
 	columns = ['pk', 'name', 'owner', 'owner_contact', 'length', 'width', 'height', 'registered_at']
     
     
@@ -104,6 +104,8 @@ def map_view(request):
         if voyage:
             voyage_pk = voyage.pk
     boats = Boat.objects.filter(is_active=True)
+    boats = [boat for boat in boats if boat.is_still_navigating]
+
     boat_count = 0
     y_count = 0
     o_count = 0

@@ -25,6 +25,7 @@ def addBoat(request):
     '''
     Registers the boat into the system.
     '''
+    request.data['is_active'] = False
     serializer = BoatSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
