@@ -53,6 +53,14 @@ class Boat(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @property
+    def is_still_navigating(self):
+        voyage = Voyage.objects.filter(boat=self).last()
+        if voyage:
+            return voyage.get_ended_at() == None
+        else:
+            return False
 
     def last_location(self):
         last_record = self.record_set.last()
@@ -104,7 +112,7 @@ class Voyage(models.Model):
         self.save()
 
     def get_ended_at(self):
-        return self.ended_at if self.ended_at else ''
+        return self.ended_at if self.ended_at else None
 
     def __str__(self):
         ended = self.ended_at.strftime("%m/%d/%y %H:%M:%S") if self.ended_at else 'ongoing'

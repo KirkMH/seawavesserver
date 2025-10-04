@@ -118,7 +118,7 @@
   function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 9.115891, lng: 126.235178}, // Tandag City
-      zoom: 13
+      zoom: 12
     });
     // Create an info window to share between markers.
     infoWindow = new google.maps.InfoWindow();
@@ -153,10 +153,16 @@
     const loc = locations[index];
     index--;
     if (index < 0)
-      clearInterval(intervalVar);
+      index = 0;
 
     console.log(loc);
     resetMarker();
+
+
+    const sos = loc.pitch_angle == 100 && loc.roll_angle == 100;
+    const sos_desc = sos ? "SOS! - " : "";
+    const sos_html = sos ? "<b>SOS!</b><br><br>" : "";
+    loc.color = sos ? "purple" : loc.color;
 
     const direction = (180 + loc.heading_angle) % 360;
     const svgMarker = {
@@ -171,8 +177,8 @@
 
     const newMarker = new google.maps.Marker({
       position: {lat: loc.latitude, lng: loc.longitude},
-      title: "<b>" + loc.timestamp + "</b><br>Heading: " + loc.heading_angle + "<br>Pitch: " + loc.pitch_angle + "<br>Roll: " + loc.roll_angle,
-      label: loc.timestamp,
+      title: sos_html + "<b>" + loc.timestamp + "</b><br>Heading: " + loc.heading_angle + "<br>Pitch: " + loc.pitch_angle + "<br>Roll: " + loc.roll_angle,
+      label: sos_desc + loc.timestamp,
       icon: svgMarker,
       map: map,
     });
@@ -219,4 +225,3 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFV4PqAS7hCB8KXmcZ6oM8XC9pJ1cK9GU&callback=initMap&v=weekly"></script>
 
 {% endblock js %}
-  

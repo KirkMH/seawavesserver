@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_header %}
-{% include 'includes/datatable.html' %}    
+{% include 'includes/datatable.html' %}
 {% endblock extra_header %}
 
 {% block title %}Monitoring{% endblock title %}
@@ -26,21 +26,21 @@
     margin-bottom: 6px;
   }
 </style>
-{% endblock css %}  
+{% endblock css %}
 
 {% block wrapper %}
 
 {% endblock wrapper %}
-  
+
 {% block page_title %}Monitoring{% endblock page_title %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
     <li class="breadcrumb-item active">Monitoring</li>
 {% endblock breadcrumb %}
-    
 
-{% block main_content %}   
+
+{% block main_content %}
 
     <!-- Main content -->
     <section class="content">
@@ -63,13 +63,13 @@
               <!-- /.card-footer -->
             </div>
             <!-- /.card -->
-            
+
           </section>
           <!-- /.Left col -->
-          
+
           <!-- right col -->
           <section class="col-lg-2 col-md-6 col-sm-12 connectedSortable">
-            
+
             <!-- Legend -->
             <div class="card">
               <div class="card-header border-0">
@@ -84,7 +84,7 @@
                   <h3>{{ boat_count }}</h3>
                   <p>Boat{{ boat_count|pluralize }} Registered</p>
                   <hr />
-<!--                   
+<!--
                   <h3>{{ y_count }}</h3>
                   <p>Boat{{ y_count|pluralize }} in Yellow Alert</p>
                   <hr />
@@ -109,7 +109,7 @@
         </div>
         <!-- /.row (main row) -->
         {% if focus %}
-        <div id="focus_row" class="row">  
+        <div id="focus_row" class="row">
           <div class="col-12 card">
             <h2 class="card-header text-center" style="padding-top: 30px;">{{ focus.boat.name }}</h2>
             <div class="row">
@@ -139,7 +139,7 @@
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-    
+
 {% endblock main_content %}
 
 
@@ -196,7 +196,7 @@ function showToast(index) {
 }
 
 // $(document).ready(function() {
-    
+
   //-------------
   //- LINE CHART -
   //--------------
@@ -257,12 +257,12 @@ function showToast(index) {
   function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 9.115891, lng: 126.235178}, // Tandag City
-      zoom: 13
+      zoom: 12
     });
 
     loadMap();
   }
-   
+
   let labels = [];
   let pitch = [];
   let roll = [];
@@ -276,7 +276,7 @@ function showToast(index) {
       dataType: 'json', // type of response data
       success: function (data) {   // success callback function
         const locations = data;
-        
+
         // Create an info window to share between markers.
         const infoWindow = new google.maps.InfoWindow();
 
@@ -299,6 +299,11 @@ function showToast(index) {
             }
           }
           ctr++;
+
+          const sos = loc.pitch == 100 && loc.roll == 100;
+          const sos_desc = sos ? "SOS! - " : "";
+          const sos_html = sos ? "<b>SOS</b><br><br>" : "";
+          loc.color = sos ? "purple" : loc.color;
 
           const direction = (180 + loc.heading) % 360;
           const svgMarker = {
@@ -324,18 +329,19 @@ function showToast(index) {
           details.push(detail);
           const marker = new google.maps.Marker({
             position: {lat: loc.latitude, lng: loc.longitude},
-            title: loc.name,
-            info:   "<b>" + loc.name + 
-                    "</b><br>Heading: " + loc.heading + 
-                    "<br>Pitch: " + loc.pitch + 
-                    "<br>Roll: " + loc.roll + 
+            title: sos_desc + loc.name,
+            info:   sos_html +
+                    "<b>" + loc.name +
+                    "</b><br>Heading: " + loc.heading +
+                    "<br>Pitch: " + loc.pitch +
+                    "<br>Roll: " + loc.roll +
                     "<br><a href='#' onclick='showToast(" + i + ");'>More info...</a>",
-            label: loc.name,
+            label: sos_desc + loc.name,
             icon: svgMarker,
             map: map,
           });
           locations[i].marker = marker;
-          
+
           // Add a click listener for each marker, and set up the info window.
           marker.addListener("click", () => {
             infoWindow.close();
@@ -357,7 +363,7 @@ function showToast(index) {
         areaChartData.labels = labels;
         areaChartData.datasets[0].data = pitch;
         areaChartData.datasets[1].data = roll;
-        
+
         var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
         var lineChartOptions = $.extend(true, {}, areaChartOptions)
         var lineChartData = $.extend(true, {}, areaChartData)
@@ -372,7 +378,7 @@ function showToast(index) {
         });
 
       },
-      error: function (errorMessage) { // error callback 
+      error: function (errorMessage) { // error callback
           console.log('Error: ' + errorMessage);
       }
     });
@@ -388,7 +394,7 @@ function showToast(index) {
   function startTimer() {
     const reloadInterval = 1000; // 1 second. previously: parseInt("{{setting.post_rate}}");
     console.log(reloadInterval);
-      
+
     intervalVar = setInterval(loadMap, reloadInterval);
   }
 
@@ -398,11 +404,11 @@ function showToast(index) {
     $('#dtRecord').DataTable({
         serverSide: true,
         "pageLength": 500,
-        sAjaxSource: "{% url 'focus_record_dtlist' %}", 
+        sAjaxSource: "{% url 'focus_record_dtlist' %}",
         columns: [
             {name: "pk", data: 0, className: 'text-center'},
             {
-                name: "timestamp", 
+                name: "timestamp",
                 data: 1,
                 render: function (data) {
                     return formatDate(new Date(data));
@@ -421,7 +427,7 @@ function showToast(index) {
     const reloadInterval = 30000;
     setInterval(function(){$('#dtRecord').DataTable().ajax.reload();}, reloadInterval);
   }
-    
+
   $("#menu_monitoring").addClass("active");
 
   startTimer();
