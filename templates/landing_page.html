@@ -28,6 +28,31 @@
 
   <!-- Main CSS File -->
   <link href="{% static 'css/main.css' %}" rel="stylesheet">
+  <style>
+    
+    .pill-button {
+      background-color: #007bff; /* Example background color */
+      color: white;
+      padding: 20px 60px;
+      border: none;
+      border-radius: 75px; /* Adjust based on desired height, or use a large value like 999px */
+      cursor: pointer;
+      font-size: 16px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      width: 350px;
+    }
+
+    .pill-button h4 {
+      color: white;
+    }
+
+    .pill-button:hover {
+      background-color: #0056b3; /* Darker shade on hover */
+      color: white;
+    }
+  </style>
 </head>
 
 <body class="index-page">
@@ -162,6 +187,18 @@
       </div>
 
     </section><!-- /Services Section -->
+
+    <!-- Download Section -->
+    <section id="download" class="download section">
+      <div class="container section-title" data-aos="fade-up">
+        <a href="{% static 'apk/seawaves-v1.20.1.apk' %}" class="pill-button">
+          <h4><i class="bi bi-download"></i>
+          Download App
+          </h4>
+          <small>Version 1.20.1 for Android</small>
+        </a>
+      </div>
+    </section><!-- /Download Section -->
 
     <!-- Contact Section -->
     <section id="contact" class="contact section">
