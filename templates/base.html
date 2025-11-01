@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% endblock %} | SEAWAVES Server</title>
+  <title>{% block title %}{% endblock %} | SEAWAVES {{ user.userprofile.adopter.name }}</title>
   <link rel="icon" href="{% static 'img/seawaves_icon.png' %}">
 
   <!-- Google Font: Source Sans Pro -->
@@ -26,7 +26,7 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
   <style>
     .brand-link > span {
-      color: darkgreen;
+      color: black;
     }
   </style>
   {% block css %}{% endblock css %}
@@ -49,8 +49,9 @@
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-lg navbar-light navbar-white elevation-2 fixed-top primary">
     <!-- Brand Logo -->
-    <a href="{% url 'dashboard' %}" class="brand-link">
-      <img src="{% static 'img/seawaves_logo_fit.png' %}" alt="Logo" class="brand-image my-auto">
+     <a href="{% url 'dashboard' %}" class="brand-link d-flex align-items-center">
+      <img src="{% static 'img/seawaves_logo_fit.png' %}" alt="Logo" class="brand-image me-2">
+      <span class="brand-text">&nbsp;{{ user.userprofile.adopter.name }}</span>
     </a>
     
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -143,6 +144,23 @@
 <script>
   $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
+    toastr.options = {
+      closeButton: true,
+      debug: false,
+      newestOnTop: true,
+      progressBar: false,
+      positionClass: "toast-bottom-right",
+      preventDuplicates: false,
+      onclick: null,
+      showDuration: "300",
+      hideDuration: "1000",
+      timeOut: "5000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
   });
 </script>
 

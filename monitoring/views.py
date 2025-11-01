@@ -1,35 +1,46 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django_serverside_datatable.views import ServerSideDatatableView
 from .models import Bulletin, Setting, Boat, Record, Voyage, FocusBoat
+from .forms import BoatForm, SettingForm
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def dashboard_view(request):
+    adopter = request.user.userprofile.adopter
     hour = datetime.now().hour
     greeting = 'Good {}!'.format(
         'morning' if hour < 12 else 'afternoon' if hour < 18 else 'evening')
-    boat_count = Boat.objects.filter(is_active=True).count()
+    boat_count = Boat.objects.filter(adopter=adopter, is_active=True).count()
 
     context = {
-        'bulletin_list': Bulletin.available.all(),
+        'bulletin_list': Bulletin.available.filter(adopter=adopter),
         'greeting': greeting,
-        'setting': Setting.objects.last(),
+        'setting': Setting.objects.filter(adopter=adopter).last(),
         'boat_count': boat_count
     } 
     return render(request, 'dashboard.html', context)
 
-    
+
+@login_required
 def boat_listview(request):
     return render(request, 'monitoring/boat_list.html')
 
 class BoatDTListView(ServerSideDatatableView):
-	queryset = Boat.objects.filter(is_active=True)
-	columns = ['pk', 'name', 'owner', 'owner_contact', 'length', 'width', 'height', 'registered_at']
+
+    def get(self, request, *args, **kwargs):
+        adopter = request.user.userprofile.adopter
+        self.queryset = Boat.objects.filter(adopter=adopter)
+        self.columns = ['pk', 'name', 'owner', 'owner_contact', 'length', 'width', 'height', 'registered_at', 'is_active']
+        return super().get(request, *args, **kwargs)
     
     
+    
+@login_required
 def voyage_listview(request, pk):
     request.session['boat_id'] = pk
-    setting = Setting.objects.last()
+    adopter = request.user.userprofile.adopter
+    setting = Setting.objects.filter(adopter=adopter).last()
     context = {
         'boat': Boat.objects.get(pk=pk),
         'post_interval': setting.post_rate
@@ -47,10 +58,12 @@ class VoyageDTListView(ServerSideDatatableView):
         return super().get(request, *args, **kwargs)
     
     
+@login_required
 def record_listview(request, pk):
     request.session['voyage_id'] = pk
     voyage = Voyage.objects.get(pk=pk)
-    setting = Setting.objects.last()
+    adopter = request.user.userprofile.adopter
+    setting = Setting.objects.filter(adopter=adopter).last()
     context = {
         'boat': voyage.boat,
         'voyage': voyage,
@@ -64,8 +77,6 @@ class RecordDTListView(ServerSideDatatableView):
         pk = request.session.get('voyage_id', 0)
         voyage = get_object_or_404(Voyage, pk=pk)
         self.queryset = Record.objects.filter(voyage=voyage)
-        print(f'voyage pk: {pk}')
-        print(self.queryset)
         self.columns = ['pk', 'timestamp', 'latitude', 'longitude', 'altitude', 
                         'heading_angle', 'pitch_angle', 'roll_angle', 
                         'gyro_x', 'gyro_y', 'gyro_z', 
@@ -77,7 +88,7 @@ class FocusRecordDTListView(ServerSideDatatableView):
 	
     def get(self, request, *args, **kwargs):
         pk = 0
-        fboat = FocusBoat.objects.last()
+        fboat = FocusBoat.objects.filter(adopter=request.user.userprofile.adopter).last()
         if fboat:
             boat_voyage = Voyage.objects.filter(boat=fboat.boat).last()
             if boat_voyage:
@@ -90,22 +101,24 @@ class FocusRecordDTListView(ServerSideDatatableView):
                         'accel_x', 'accel_y', 'accel_z', 
                         'mag_x', 'mag_y', 'mag_z', 'signalStrength', 'speed', 'sent_timestamp']
         return super().get(request, *args, **kwargs)
-        
 
 def instructions_view(request):
     return render(request, 'monitoring/api_instructions.html')
 
-
+@login_required
 def map_view(request):
-    fboat = FocusBoat.objects.last()
+    adopter = request.user.userprofile.adopter
+    print(f"adopter: {adopter}")
+    fboat = FocusBoat.objects.filter(adopter=adopter).last()
     voyage_pk = 0
     if fboat:
         voyage = Voyage.objects.filter(boat=fboat.boat).last()
         if voyage:
             voyage_pk = voyage.pk
-    boats = Boat.objects.filter(is_active=True)
+    boats = Boat.objects.filter(is_active=True, adopter=adopter)
+    print(f"boats: {boats}")
     boats = [boat for boat in boats if boat.is_still_navigating]
-
+    print(f"filtered boats: {boats}")
     boat_count = 0
     y_count = 0
     o_count = 0
@@ -121,7 +134,8 @@ def map_view(request):
             r_count += 1
 
     context = {
-        'setting': Setting.objects.last(),
+        'setting': Setting.objects.filter(adopter=adopter).last(),
+        'adopter': adopter,
         'boat_count': boat_count,
         'y_count': y_count, 
         'o_count': o_count, 
@@ -130,3 +144,34 @@ def map_view(request):
         'voyage_pk': voyage_pk
     } 
     return render(request, 'map.html', context)
+
+
+@login_required
+def update_boat(request, pk):
+    boat = get_object_or_404(Boat, pk=pk)
+    form = BoatForm(instance=boat)
+    status = ""
+
+    if request.method == 'POST':
+        form = BoatForm(request.POST, instance=boat)
+        if form.is_valid():
+            form.save()
+            status = "success"
+
+    return render(request, 'monitoring/update_boat.html', {'boat': boat, 'form': form, 'status': status})
+
+
+@login_required
+def update_settings(request):
+    setting = Setting.objects.filter(adopter=request.user.userprofile.adopter).last()
+    form = SettingForm(instance=setting)
+    status = ""
+
+    if request.method == 'POST':
+        form = SettingForm(request.POST, instance=setting)
+        if form.is_valid():
+            form.save()
+            status = "success"
+    
+    print(f'status: {status}')
+    return render(request, 'monitoring/update_settings.html', {'setting': setting, 'form': form, 'status': status})

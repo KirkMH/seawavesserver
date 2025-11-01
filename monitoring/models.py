@@ -1,12 +1,73 @@
 from django.db import models
 from django.db.models import Max, Avg
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from datetime import date
 
 
+class Adopter(models.Model):
+    code = models.CharField(
+        _("Adopter Code"), 
+        max_length=6,
+        unique=True
+    )
+    name = models.CharField(
+        _("Adopter's Name"), 
+        max_length=100
+    )
+    address = models.CharField(
+        _("Adopter's Address"), 
+        max_length=250
+    )
+    contact_person = models.CharField(
+        _("Adopter's Contact Person"), 
+        max_length=100
+    )
+    email = models.EmailField(
+        _("Adopter's Email"),
+        max_length=250
+    )
+    phone = models.CharField(
+        _("Adopter's Phone"),
+        max_length=50,
+        null=True,
+        blank=True,
+        default=None
+    )
+    map_title = models.CharField(
+        _("Map Title"),
+        max_length=100,
+        default="Map"
+    )
+    map_center_lat = models.FloatField(
+        _("Map Center Latitude"),
+        validators=[MinValueValidator(-90), MaxValueValidator(90)],
+        default=0
+    )
+    map_center_lng = models.FloatField(
+        _("Map Center Longitude"),
+        validators=[MinValueValidator(-180), MaxValueValidator(180)],
+        default=0
+    )
+    map_zoom = models.IntegerField(
+        _("Map Zoom"),
+        default=12
+    )
+    
+    def __str__(self):
+        return self.name
+
+
 class Boat(models.Model):
+    adopter = models.ForeignKey(
+        Adopter, 
+        verbose_name=_("Adopter"), 
+        null=True,
+        blank=True,
+        default=None,
+        on_delete=models.CASCADE
+    )
     name = models.CharField(
         _("Boat's Name"), 
         max_length=100
@@ -49,7 +110,7 @@ class Boat(models.Model):
 
     class Meta:
         ordering = ['-registered_at']
-        unique_together = ('name', 'owner',)
+        unique_together = ('name', 'owner', 'adopter')
 
     def __str__(self):
         return self.name
@@ -57,6 +118,7 @@ class Boat(models.Model):
     @property
     def is_still_navigating(self):
         voyage = Voyage.objects.filter(boat=self).last()
+        print(f"Voyage: {voyage}")
         if voyage:
             return voyage.get_ended_at() == None
         else:
@@ -244,29 +306,43 @@ class LocalReadingAndError(models.Model):
 
 
 class Setting(models.Model):
+    adopter = models.OneToOneField(
+        Adopter, 
+        verbose_name=_("Adopter"), 
+        null=True,
+        blank=True,
+        default=None,
+        on_delete=models.CASCADE,
+    )
     critical_pitch_angle = models.FloatField(
         _("Critical Pitch Angle"),
-        help_text='(in degrees)'
+        help_text='(in degrees)',
+        default=15.0
     )
     critical_roll_angle = models.FloatField(
         _("Critical Roll Angle"),
-        help_text='(in degrees)'
+        help_text='(in degrees)',
+        default=20.0
     )
     reading_rate = models.FloatField(
         _("Reading Rate"),
-        help_text='(in milliseconds)'
+        help_text='(in milliseconds)',
+        default=250.0
     )
     saving_rate = models.FloatField(
         _("Saving Rate"),
-        help_text='(in milliseconds)'
+        help_text='(in milliseconds)',
+        default=60000.0
     )
     sms_rate = models.FloatField(
         _("SMS Rate"),
-        help_text='(in milliseconds)'
+        help_text='(in milliseconds)',
+        default=60000.0
     )
     post_rate = models.FloatField(
         _("Server Post Rate"),
-        help_text='(in milliseconds)'
+        help_text='(in milliseconds)',
+        default=60000.0
     )
     mobile_number = models.CharField(
         _("Mobile number for alarms"), 
@@ -284,6 +360,14 @@ class AvailableBulletin(models.Manager):
 
 
 class Bulletin(models.Model):
+    adopter = models.ForeignKey(
+        Adopter, 
+        null=True,
+        blank=True,
+        default=None,
+        verbose_name=_("Adopter"), 
+        on_delete=models.CASCADE,
+    )
     title = models.CharField(
         _("Title"), 
         max_length=250
@@ -316,6 +400,14 @@ class Bulletin(models.Model):
     
 
 class FocusBoat(models.Model):
+    adopter = models.ForeignKey(
+        Adopter, 
+        null=True,
+        blank=True,
+        default=None,
+        verbose_name=_("Adopter"), 
+        on_delete=models.CASCADE,
+    )
     boat = models.ForeignKey(Boat, on_delete=models.CASCADE)
 
     class Meta:

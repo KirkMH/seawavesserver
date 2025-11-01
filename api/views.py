@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics
-from monitoring.models import Boat, Record, Setting, Voyage
+from monitoring.models import Boat, Record, Setting, Voyage, Adopter
 from .serializers import *
 from datetime import datetime
 
@@ -13,12 +13,21 @@ class BoatListView(generics.ListAPIView):
     queryset = Boat.objects.all()
     serializer_class = BoatSerializer
 
-class BoatLocationsListView(generics.ListAPIView):
+@api_view(['GET'])
+def getBoatLocations(request):
     '''
     Returns the list of boats with their current location
     '''
-    queryset = Boat.objects.filter(is_active=True, record__isnull=False).distinct()
-    serializer_class = BoatLocationSerializer
+    code = request.query_params.get('adopterCode')
+    print(f"Code: {code}")
+    adopter = Adopter.objects.get(code=code)
+    print(f"Adopter: {adopter}")
+    boats = Boat.objects.filter(adopter=adopter, is_active=True, record__isnull=False).distinct()
+    print(f"Boats: {boats}")
+    boats = [boat for boat in boats if boat.is_still_navigating]
+    print(f"Filtered Boats: {boats}")
+    serializer = BoatLocationSerializer(boats, many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def addBoat(request):
@@ -37,7 +46,9 @@ def getSettings(request):
     '''
     Returns the settings set in the system.
     '''
-    settings = Setting.objects.last()
+    code = request.query_params.get('adopterCode')
+    adopter = Adopter.objects.get(code=code)
+    settings = Setting.objects.filter(adopter=adopter).last()
     serializer = SettingSerializer(settings, many=False)
     return Response(serializer.data)
 
