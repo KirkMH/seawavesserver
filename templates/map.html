@@ -54,7 +54,7 @@
               <div class="card-header border-0">
                 <h3 class="card-title">
                   <i class="fas fa-map-marked mr-1"></i>
-                  Map
+                  {{ adopter.name }} Map
                 </h3>
               </div>
               <div class="card-body table-responsive">
@@ -81,8 +81,8 @@
               </div>
               <div class="card-body table-responsive">
                 <div id="legend" class="text-center">
-                  <h3>{{ boat_count }}</h3>
-                  <p>Boat{{ boat_count|pluralize }} Registered</p>
+                  <h3 id="boat_count">{{ boat_count }}</h3>
+                  <p>Navigating Boat<span id="boat_plural">{{ boat_count|pluralize }}</span></p>
                   <hr />
 <!--
                   <h3>{{ y_count }}</h3>
@@ -161,25 +161,6 @@
 
 <script src="{% static 'js/formatter.js' %}"></script>
 <script>
-
-toastr.options = {
-  "closeButton": false,
-  "debug": false,
-  "newestOnTop": false,
-  "progressBar": false,
-  "positionClass": "toast-bottom-right",
-  "preventDuplicates": false,
-  "onclick": null,
-  "showDuration": "300",
-  "hideDuration": "1000",
-  "timeOut": "5000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-}
-
 var details = [];
 function showToast(index) {
   const detail = details[index];
@@ -255,9 +236,12 @@ function showToast(index) {
   var map;
   var markers = new Array()
   function initMap() {
+    let latitude = parseFloat('{{ adopter.map_center_lat }}');
+    let longitude = parseFloat('{{ adopter.map_center_lng }}');
+    let zoomLevel = parseInt('{{ adopter.map_zoom }}');
     map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 9.115891, lng: 126.235178}, // Tandag City
-      zoom: 12
+      center: { lat: latitude, lng: longitude},
+      zoom: zoomLevel
     });
 
     loadMap();
@@ -272,7 +256,7 @@ function showToast(index) {
 
     $.ajax({
       type: "GET",
-      url: '/api/locations',
+      url: '/api/locations?adopterCode={{ adopter.code }}',
       dataType: 'json', // type of response data
       success: function (data) {   // success callback function
         const locations = data;
@@ -283,7 +267,11 @@ function showToast(index) {
         // The markers
         resetMarkers()
         const iconBase = "/static/img/dot_";
-        for (let i = 0; i < locations.length; i++) {
+        const boat_count = locations.length;
+        console.log("boat_count: " + boat_count);
+        $('#boat_count').text(boat_count);
+        $('#boat_plural').text(boat_count == 1 ? '' : 's');
+        for (let i = 0; i < boat_count; i++) {
           const loc = locations[i];
           if (!(loc.latitude > 0)) continue;
 
@@ -360,22 +348,24 @@ function showToast(index) {
         console.log("labels: " + labels);
         console.log("pitch: " + pitch);
         console.log("roll: " + roll);
-        areaChartData.labels = labels;
-        areaChartData.datasets[0].data = pitch;
-        areaChartData.datasets[1].data = roll;
+        if ('{{focus.pk}}' !== '') {
+          areaChartData.labels = labels;
+          areaChartData.datasets[0].data = pitch;
+          areaChartData.datasets[1].data = roll;
 
-        var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
-        var lineChartOptions = $.extend(true, {}, areaChartOptions)
-        var lineChartData = $.extend(true, {}, areaChartData)
-        lineChartData.datasets[0].fill = false;
-        lineChartData.datasets[1].fill = false;
-        lineChartOptions.datasetFill = false
+          var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+          var lineChartOptions = $.extend(true, {}, areaChartOptions)
+          var lineChartData = $.extend(true, {}, areaChartData)
+          lineChartData.datasets[0].fill = false;
+          lineChartData.datasets[1].fill = false;
+          lineChartOptions.datasetFill = false
 
-        var lineChart = new Chart(lineChartCanvas, {
-          type: 'line',
-          data: lineChartData,
-          options: lineChartOptions
-        });
+          var lineChart = new Chart(lineChartCanvas, {
+            type: 'line',
+            data: lineChartData,
+            options: lineChartOptions
+          }); 
+        }
 
       },
       error: function (errorMessage) { // error callback

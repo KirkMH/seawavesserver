@@ -75,7 +75,7 @@
                         name: "endedAt", 
                         data: 2,
                         render: function (data) {
-                            return formatDate(new Date(data));
+                            return data ? formatDate(new Date(data)) : '';
                         }
                     },
                     {name: "maxPitch", data: 4, className: "text-center"},
