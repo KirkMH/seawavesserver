@@ -35,10 +35,28 @@ def addBoat(request):
     Registers the boat into the system.
     '''
     request.data['is_active'] = False
-    serializer = BoatSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    response = serializer.data
+    response = {
+        'success': False,
+        'message': None
+    }
+    try:
+        print(f"Request data: {request.data}")
+        adopter = Adopter.objects.filter(code=request.data['adopter'])
+        print(f"Adopter: {adopter}")
+        if adopter.count() > 0:
+            request.data['adopter'] = adopter.first().pk
+            serializer = BoatSerializer(data=request.data)
+            print(f"Serializer: {serializer}")
+            if serializer.is_valid():
+                serializer.save()
+                response['success'] = True
+                response['message'] = serializer.data
+            else:
+                response['message'] = serializer.errors
+        else:
+            response['message'] = 'Adopter not found'
+    except Exception as e:
+        response['message'] = str(e)
     return Response(response)
     
 @api_view(['GET'])
@@ -46,11 +64,20 @@ def getSettings(request):
     '''
     Returns the settings set in the system.
     '''
+    response = {
+        'success': False,
+        'message': None
+    }
     code = request.query_params.get('adopterCode')
-    adopter = Adopter.objects.get(code=code)
-    settings = Setting.objects.filter(adopter=adopter).last()
-    serializer = SettingSerializer(settings, many=False)
-    return Response(serializer.data)
+    try:
+        adopter = Adopter.objects.get(code=code)
+        settings = Setting.objects.filter(adopter=adopter).last()
+        serializer = SettingSerializer(settings, many=False)
+        response['success'] = True
+        response['message'] = serializer.data
+    except Exception as e:
+        response['message'] = str(e)
+    return Response(response)
 
 @api_view(['GET'])
 def getBoatDetail(request):
