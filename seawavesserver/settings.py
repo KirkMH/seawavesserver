@@ -20,10 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-tq0mdn7anz!h#^vyx_w+qmgvt&q1+7+9z1_+fef1+!1b$c+&_n'
+SECRET_KEY = 'seawaves-s3cr3t-k3y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['seawaves.pythonanywhere.com', '127.0.0.1', 'seawaves.tech', 'www.seawaves.tech', '167.71.106.70']
 
@@ -82,23 +82,15 @@ WSGI_APPLICATION = 'seawavesserver.wsgi.application'
 
 DATABASES = {
     # development
-    # 'mysql': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'django_seawavesserver',
-    #     'USER': 'root',
-    #     'PASSWORD': 'p4$$DB',
-    #     'HOST': 'localhost'
-    # }
-    # postgresql
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_seawavesserver', 
-        'USER': 'django_root',
-        'PASSWORD': 's3awaves@1234',
-        'HOST': 'localhost',
-        'PORT': '5432', 
-    },
-    'production': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'django_seawavesserver',
+    #     'USER': 'django_root',
+    #     'PASSWORD': 's3awaves@1234',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # },
+    # 'production': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'seawaves$default',
         'USER': 'seawaves',
