@@ -68,9 +68,9 @@ def getSettings(request):
         'success': False,
         'message': None
     }
-    code = request.query_params.get('adopterCode')
+    adopterId = request.query_params.get('adopterId')
     try:
-        adopter = Adopter.objects.get(code=code)
+        adopter = Adopter.objects.get(pk=adopterId)
         settings = Setting.objects.filter(adopter=adopter).last()
         serializer = SettingSerializer(settings, many=False)
         response['success'] = True
